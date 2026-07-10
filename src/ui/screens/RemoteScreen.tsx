@@ -51,7 +51,7 @@ export function RemoteScreen() {
               onClick={() => setTheme(t)}
               aria-pressed={db.settings.theme === t}
               className={[
-                'min-h-20 rounded-xl border-2 bg-fondo p-3 text-left transition',
+                'min-h-20 rounded-xl border-2 bg-fondo p-3 text-left font-tema transition',
                 db.settings.theme === t ? 'border-acento' : 'border-borde-2',
               ].join(' ')}
             >

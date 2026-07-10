@@ -25,7 +25,7 @@ export default function App() {
   const { db, saveError } = useStore()
 
   return (
-    <div data-theme={db.settings.theme} className="flex h-full flex-col bg-fondo text-tinta">
+    <div data-theme={db.settings.theme} className="flex h-full flex-col bg-fondo font-tema text-tinta">
       <header className="flex shrink-0 items-center justify-between border-b border-borde px-4 pt-[env(safe-area-inset-top)]">
         <h1 className="py-3 text-sm font-semibold uppercase tracking-widest text-tinta-3">
           {TITLES[view]}

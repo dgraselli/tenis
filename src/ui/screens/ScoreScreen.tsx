@@ -66,15 +66,15 @@ export function ScoreScreen() {
             ].join(' ')}
           >
             <div className="min-w-0 text-left">
-              <div className="truncate text-xl font-semibold text-tinta">{nameOf(side)}</div>
-              <div className="tabular mt-1 text-5xl font-bold text-tinta-2">
+              <div className="truncate text-nombre font-semibold text-tinta">{nameOf(side)}</div>
+              <div className="tabular font-marcador mt-1 text-games font-bold leading-none text-tinta-2">
                 {status.games[side]}
               </div>
               <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">games</div>
             </div>
 
             {status.current && (
-              <div className="tabular text-7xl font-black text-acento-vivo">
+              <div className="tabular font-marcador text-puntos font-black leading-none text-acento-vivo">
                 {formatPoint(status.current, side)}
               </div>
             )}
@@ -87,7 +87,7 @@ export function ScoreScreen() {
           <p className="text-center text-lg">
             Ganó <strong className="text-acento-vivo">{nameOf(status.winner)}</strong>
           </p>
-          <p className="tabular mt-1 text-center text-3xl font-bold text-tinta">
+          <p className="tabular font-marcador mt-1 text-center text-3xl font-bold text-tinta">
             {formatFinalScore(status, status.winner)}
           </p>
           <div className="mt-4 flex gap-3">

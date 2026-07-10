@@ -28,6 +28,13 @@
   --color-peligro: var(--tema-peligro);
   --color-peligro-fondo: var(--tema-peligro-fondo);
   --color-peligro-tinta: var(--tema-peligro-tinta);
+
+  /* Tipografía por tema: fuente general, fuente del marcador y tamaños del tanteador. */
+  --font-tema: var(--tema-fuente);
+  --font-marcador: var(--tema-fuente-marcador);
+  --text-nombre: var(--tema-nombre);
+  --text-games: var(--tema-games);
+  --text-puntos: var(--tema-puntos);
 }
 
 /* Oscuro: el original. Sobrio, no encandila de noche. */
@@ -55,6 +62,13 @@
   --tema-peligro: #fb7185;
   --tema-peligro-fondo: #881337;
   --tema-peligro-tinta: #ffe4e6;
+
+  /* Los temas que no digan otra cosa heredan esta tipografía. */
+  --tema-fuente: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --tema-fuente-marcador: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --tema-nombre: 1.25rem;
+  --tema-games: 3rem;
+  --tema-puntos: 4.5rem;
 }
 
 /* Claro: para pleno sol. */
@@ -107,6 +121,10 @@
   --tema-peligro: #dc2626;
   --tema-peligro-fondo: #fee2e2;
   --tema-peligro-tinta: #7f1d1d;
+
+  --tema-fuente: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', cursive;
+  --tema-fuente-marcador: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', cursive;
+  --tema-puntos: 5rem;
 }
 
 /* Alto contraste: negro y amarillo bien fuertes, se lee desde el fondo de la cancha. */
@@ -133,6 +151,45 @@
   --tema-peligro: #ff6666;
   --tema-peligro-fondo: #660000;
   --tema-peligro-tinta: #ffffff;
+
+  /* De lejos: letra ancha y números enormes. */
+  --tema-fuente: Verdana, 'DejaVu Sans', system-ui, sans-serif;
+  --tema-fuente-marcador: 'Arial Black', 'DejaVu Sans', Verdana, sans-serif;
+  --tema-nombre: 1.875rem;
+  --tema-games: 4.5rem;
+  --tema-puntos: 8rem;
+}
+
+/* Grand Slam: verde de tablero, dígitos amarillos de marcador. */
+[data-theme='slam'] {
+  --tema-fondo: #0b3d20;
+  --tema-panel: #092e19;
+  --tema-tarjeta: #14532d;
+  --tema-chip: #1d6b3c;
+  --tema-chip-activo: #27804a;
+  --tema-borde: #14532d;
+  --tema-borde-2: #1d6b3c;
+  --tema-tinta: #ffffff;
+  --tema-tinta-2: #fef9c3;
+  --tema-tinta-3: #d1fae5;
+  --tema-tinta-4: #a7f3d0;
+  --tema-tinta-5: #6ee7b7;
+  --tema-acento: #facc15;
+  --tema-acento-tinta: #0b3d20;
+  --tema-acento-vivo: #fde047;
+  --tema-acento-fondo: #166534;
+  --tema-aviso: #fb923c;
+  --tema-aviso-tinta: #431407;
+  --tema-aviso-vivo: #fdba74;
+  --tema-peligro: #f87171;
+  --tema-peligro-fondo: #7f1d1d;
+  --tema-peligro-tinta: #fee2e2;
+
+  --tema-fuente: 'Trebuchet MS', system-ui, sans-serif;
+  --tema-fuente-marcador: 'Courier New', 'DejaVu Sans Mono', monospace;
+  --tema-nombre: 1.5rem;
+  --tema-games: 3.5rem;
+  --tema-puntos: 6.5rem;
 }
 
 html,
