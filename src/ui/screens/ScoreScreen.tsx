@@ -1,0 +1,113 @@
+import { useStore } from '../../app/store'
+import { useMatch } from '../../app/useMatch'
+import { usePlayers } from '../../app/usePlayers'
+import { useRemoteControl } from '../../app/useRemoteControl'
+import { canUndo } from '../../domain/scoring/liveMatch'
+import { describeGame, describeRules, formatFinalScore, formatPoint } from '../../domain/scoring/format'
+import type { Side } from '../../domain/scoring/types'
+import { playerName } from '../../domain/players/types'
+import { NewMatchScreen } from './NewMatchScreen'
+
+export function ScoreScreen() {
+  const { db } = useStore()
+  const { active, point, undoPoint, dispatch, save, discard } = useMatch()
+  const { players } = usePlayers()
+
+  // El clicker y los botones táctiles despachan los mismos comandos.
+  useRemoteControl(db.settings.keyBindings, dispatch, active !== null)
+
+  if (active === null) return <NewMatchScreen />
+
+  const { status, rules } = active.live
+  const nameOf = (side: Side) =>
+    active.sides[side].players.map((id) => playerName(players, id)).join(' / ')
+
+  const subtitulo = describeGame(status.current, (s) => nameOf(s))
+
+  return (
+    <div className="flex flex-1 flex-col">
+      <header className="flex items-center justify-between gap-2 border-b border-slate-800 px-3 py-2">
+        <div className="min-w-0">
+          <p className="truncate text-xs text-slate-500">{describeRules(rules)}</p>
+          {subtitulo && <p className="text-sm font-semibold text-emerald-400">{subtitulo}</p>}
+        </div>
+        <div className="flex shrink-0 gap-2">
+          <button
+            type="button"
+            onClick={undoPoint}
+            disabled={!canUndo(active.live)}
+            className="min-h-11 rounded-lg bg-slate-800 px-4 text-sm font-medium text-slate-200 disabled:opacity-30"
+          >
+            Deshacer
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (confirm('¿Descartar este partido sin guardarlo?')) discard()
+            }}
+            className="min-h-11 rounded-lg px-3 text-sm text-slate-500"
+          >
+            Salir
+          </button>
+        </div>
+      </header>
+
+      <div className="flex flex-1 flex-col">
+        {(['A', 'B'] as const).map((side) => (
+          <button
+            key={side}
+            type="button"
+            disabled={status.finished}
+            onClick={() => point(side)}
+            className={[
+              'flex flex-1 items-center justify-between gap-4 px-6 transition',
+              side === 'A' ? 'bg-slate-900' : 'bg-slate-950',
+              'enabled:active:bg-emerald-900',
+            ].join(' ')}
+          >
+            <div className="min-w-0 text-left">
+              <div className="truncate text-xl font-semibold text-slate-100">{nameOf(side)}</div>
+              <div className="tabular mt-1 text-5xl font-bold text-slate-300">
+                {status.games[side]}
+              </div>
+              <div className="mt-1 text-xs uppercase tracking-wide text-slate-600">games</div>
+            </div>
+
+            {status.current && (
+              <div className="tabular text-7xl font-black text-emerald-400">
+                {formatPoint(status.current, side)}
+              </div>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {status.finished && status.winner && (
+        <div className="border-t-2 border-emerald-500 bg-slate-900 p-4">
+          <p className="text-center text-lg">
+            Ganó <strong className="text-emerald-400">{nameOf(status.winner)}</strong>
+          </p>
+          <p className="tabular mt-1 text-center text-3xl font-bold text-slate-100">
+            {formatFinalScore(status, status.winner)}
+          </p>
+          <div className="mt-4 flex gap-3">
+            <button
+              type="button"
+              onClick={undoPoint}
+              className="min-h-14 flex-1 rounded-xl bg-slate-800 font-medium text-slate-200"
+            >
+              Me equivoqué
+            </button>
+            <button
+              type="button"
+              onClick={save}
+              className="min-h-14 flex-[2] rounded-xl bg-emerald-500 text-lg font-bold text-emerald-950"
+            >
+              Guardar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

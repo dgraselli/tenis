@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  /* Se usa en la cancha, tocando rápido: sin rebote ni zoom accidental. */
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Los marcadores usan tabular-nums para que no "salten" al cambiar de 8 a 11. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

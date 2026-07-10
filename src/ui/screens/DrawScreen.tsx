@@ -1,0 +1,182 @@
+import { useStore } from '../../app/store'
+import { useDraw } from '../../app/useDraw'
+import { useMatch } from '../../app/useMatch'
+import { usePlayers } from '../../app/usePlayers'
+import { STRATEGY_HINTS, STRATEGY_LABELS } from '../../domain/draw/types'
+import type { DrawMatch, DrawStrategy } from '../../domain/draw/types'
+import { playerName } from '../../domain/players/types'
+import { validateRules } from '../../domain/scoring/types'
+import type { MatchRules } from '../../domain/scoring/types'
+import { FormatoPicker } from '../components/FormatoPicker'
+import { PlayerChip } from '../components/PlayerChip'
+import { Titulo, Vacio } from '../components/Vacio'
+import { useState } from 'react'
+
+const STRATEGIES: DrawStrategy[] = ['azar', 'sin-repetir', 'nivelado']
+
+export function DrawScreen({ onPlay }: { onPlay: () => void }) {
+  const { db } = useStore()
+  const { players } = usePlayers()
+  const { active, start } = useMatch()
+  const { session, togglePresent, draw, clearPending, reset } = useDraw()
+  const [strategy, setStrategy] = useState<DrawStrategy>('nivelado')
+  /** Cruce elegido con "Jugar": falta confirmar el formato antes de arrancar. */
+  const [pendiente, setPendiente] = useState<DrawMatch | null>(null)
+  const [rules, setRules] = useState<MatchRules | null>(null)
+
+  const activas = players.filter((p) => p.active)
+  if (activas.length < 2) {
+    return <Vacio>Cargá al menos dos jugadoras para poder sortear.</Vacio>
+  }
+
+  function jugar(match: DrawMatch) {
+    setPendiente(match)
+    // El default es el último formato usado en esa modalidad.
+    setRules(db.settings.lastRules[match.format])
+  }
+
+  function empezar() {
+    if (pendiente === null || rules === null) return
+    clearPending(pendiente)
+    start(pendiente.sideA, pendiente.sideB, rules)
+    setPendiente(null)
+    onPlay()
+  }
+
+  const nombres = (side: DrawMatch['sideA']) =>
+    side.map((id) => playerName(players, id)).join(' / ')
+
+  return (
+    <div className="flex-1 space-y-6 overflow-y-auto p-4">
+      <section>
+        <Titulo>Quiénes están ({session.present.length})</Titulo>
+        <div className="flex flex-wrap gap-2">
+          {activas.map((p) => (
+            <PlayerChip
+              key={p.id}
+              name={p.name}
+              selected={session.present.includes(p.id)}
+              onClick={() => togglePresent(p.id)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <Titulo>Cómo armar las parejas</Titulo>
+        <div className="space-y-2">
+          {STRATEGIES.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setStrategy(s)}
+              className={[
+                'w-full rounded-xl border-2 p-3 text-left transition',
+                strategy === s ? 'border-emerald-500 bg-slate-800' : 'border-slate-800',
+              ].join(' ')}
+            >
+              <span className="font-semibold text-slate-100">{STRATEGY_LABELS[s]}</span>
+              <p className="mt-1 text-sm text-slate-500">{STRATEGY_HINTS[s]}</p>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <button
+        type="button"
+        disabled={session.present.length < 2}
+        onClick={() => draw(strategy)}
+        className="min-h-14 w-full rounded-xl bg-emerald-500 text-lg font-bold text-emerald-950 disabled:opacity-30"
+      >
+        Sortear
+      </button>
+
+      {session.lastDraw && (
+        <section>
+          <Titulo>Cruces</Titulo>
+          {active !== null && (
+            <p className="mb-2 text-sm text-amber-400">
+              Hay un partido en curso. Terminalo o salí de él antes de empezar otro.
+            </p>
+          )}
+
+          <ul className="space-y-3">
+            {session.lastDraw.matches.map((m, i) => (
+              <li key={i} className="rounded-xl bg-slate-800 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-slate-100">
+                      {m.sideA.map((id) => playerName(players, id)).join(' / ')}
+                    </p>
+                    <p className="my-1 text-xs uppercase tracking-wide text-slate-600">contra</p>
+                    <p className="truncate font-medium text-slate-100">
+                      {m.sideB.map((id) => playerName(players, id)).join(' / ')}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={active !== null}
+                    onClick={() => jugar(m)}
+                    className="min-h-12 shrink-0 rounded-lg bg-emerald-500 px-5 font-bold text-emerald-950 disabled:opacity-30"
+                  >
+                    Jugar
+                  </button>
+                </div>
+                {m.format === 'singles' && (
+                  <p className="mt-2 text-xs text-slate-500">Singles: sobraban dos.</p>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {session.lastDraw.resting.length > 0 && (
+            <p className="mt-3 text-sm text-slate-400">
+              Descansa <strong>{session.lastDraw.resting.map((id) => playerName(players, id)).join(', ')}</strong>.
+              En la próxima ronda le toca a otra.
+            </p>
+          )}
+        </section>
+      )}
+
+      <button
+        type="button"
+        onClick={reset}
+        className="min-h-12 w-full rounded-xl text-sm text-slate-500"
+      >
+        Reiniciar la jornada
+      </button>
+
+      {pendiente !== null && rules !== null && (
+        <div className="fixed inset-0 z-10 flex items-end justify-center bg-slate-950/80 p-4 sm:items-center">
+          <div className="max-h-full w-full max-w-md space-y-4 overflow-y-auto rounded-2xl bg-slate-900 p-4">
+            <div>
+              <Titulo>Formato de juego</Titulo>
+              <p className="text-sm text-slate-400">
+                {nombres(pendiente.sideA)} <span className="text-slate-600">contra</span>{' '}
+                {nombres(pendiente.sideB)}
+              </p>
+            </div>
+
+            <FormatoPicker rules={rules} onChange={setRules} />
+
+            <button
+              type="button"
+              disabled={validateRules(rules).length > 0}
+              onClick={empezar}
+              className="min-h-14 w-full rounded-xl bg-emerald-500 text-lg font-bold text-emerald-950 disabled:opacity-30"
+            >
+              Empezar partido
+            </button>
+            <button
+              type="button"
+              onClick={() => setPendiente(null)}
+              className="min-h-12 w-full rounded-xl text-sm text-slate-500"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
