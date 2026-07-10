@@ -41,7 +41,8 @@ self.addEventListener('fetch', (event) => {
           guardar(request, response.clone())
           return response
         })
-        .catch(async () => (await caches.match('/index.html')) ?? caches.match('/')),
+        // Relativas al propio sw.js: funcionan en la raíz y bajo /tenis/.
+        .catch(async () => (await caches.match('./index.html')) ?? caches.match('./')),
     )
     return
   }

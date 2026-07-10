@@ -19,7 +19,8 @@ createRoot(document.getElementById('root')!).render(
 // pisaría el hot reload.
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
+    // BASE_URL: '/' en desarrollo, '/tenis/' publicado en GitHub Pages.
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch((err) => {
       console.error('No se pudo registrar el service worker:', err)
     })
   })

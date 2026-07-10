@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
+  // En GitHub Pages la app vive bajo /tenis/; en desarrollo, en la raíz.
+  base: process.env.BASE_PATH ?? '/',
   plugins: [react(), tailwindcss()],
   server: {
     // Escucha en toda la red local para poder abrir la app desde el celular.
