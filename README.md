@@ -79,3 +79,5 @@ el botón del clicker, y queda asignado.
 
 Conviene uno que mande **flechas** o **Page Up/Down**. Los que mandan «subir volumen» —los remotos de
 cámara— no sirven: el sistema operativo se queda esa tecla y el navegador nunca la ve.
+
+
