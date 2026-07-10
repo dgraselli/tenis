@@ -191,4 +191,23 @@ describe('la app de punta a punta', () => {
     expect(screen.getByText('Set a 6 games')).toBeInTheDocument()
     expect(screen.getByText(/Ana/)).toBeInTheDocument()
   })
+
+  it('el tema se cambia desde ajustes y sobrevive a reabrir la app', async () => {
+    const user = userEvent.setup()
+    const { container, unmount } = renderApp()
+
+    expect(container.firstChild).toHaveAttribute('data-theme', 'oscuro')
+
+    await user.click(screen.getByRole('button', { name: 'Ajustes' }))
+    await user.click(screen.getByRole('button', { name: /Alto contraste/ }))
+    expect(container.firstChild).toHaveAttribute('data-theme', 'contraste')
+
+    unmount()
+    const segunda = render(
+      <StoreProvider repo={createLocalStorageRepo(storage)}>
+        <App />
+      </StoreProvider>,
+    )
+    expect(segunda.container.firstChild).toHaveAttribute('data-theme', 'contraste')
+  })
 })

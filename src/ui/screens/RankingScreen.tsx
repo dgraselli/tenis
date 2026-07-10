@@ -23,7 +23,7 @@ export function RankingScreen() {
       <section>
         <Titulo>Ranking individual</Titulo>
         <table className="w-full text-sm">
-          <thead className="text-xs uppercase text-slate-500">
+          <thead className="text-xs uppercase text-tinta-4">
             <tr>
               <th className="py-2 text-left font-medium">Jugadora</th>
               <th className="py-2 text-right font-medium">PJ</th>
@@ -35,25 +35,25 @@ export function RankingScreen() {
           </thead>
           <tbody className="tabular">
             {conPartidos.map((s, i) => (
-              <tr key={s.playerId} className="border-t border-slate-800">
-                <td className="py-3 text-left font-medium text-slate-100">
-                  <span className="mr-2 text-slate-600">{i + 1}</span>
+              <tr key={s.playerId} className="border-t border-borde">
+                <td className="py-3 text-left font-medium text-tinta">
+                  <span className="mr-2 text-tinta-5">{i + 1}</span>
                   {playerName(players, s.playerId)}
                 </td>
-                <td className="py-3 text-right text-slate-400">{s.played}</td>
-                <td className="py-3 text-right text-slate-400">{s.won}</td>
-                <td className="py-3 text-right text-slate-400">{pct(s.winRate)}</td>
-                <td className="py-3 text-right text-slate-400">
+                <td className="py-3 text-right text-tinta-3">{s.played}</td>
+                <td className="py-3 text-right text-tinta-3">{s.won}</td>
+                <td className="py-3 text-right text-tinta-3">{pct(s.winRate)}</td>
+                <td className="py-3 text-right text-tinta-3">
                   {s.gamesDiff > 0 ? `+${s.gamesDiff}` : s.gamesDiff}
                 </td>
-                <td className="py-3 text-right font-bold text-emerald-400">
+                <td className="py-3 text-right font-bold text-acento-vivo">
                   {Math.round(s.rating)}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <p className="mt-3 text-xs leading-relaxed text-slate-600">
+        <p className="mt-3 text-xs leading-relaxed text-tinta-5">
           El <strong>nivel</strong> es el porcentaje de victorias amortiguado: arranca cerca de 50 y
           se va acercando al rendimiento real a medida que juegan. Ganar el primer partido deja el
           nivel en 58, no en 100. Es el número que usa el sorteo nivelado.
@@ -63,7 +63,7 @@ export function RankingScreen() {
       <section>
         <Titulo>Mejores duplas</Titulo>
         {topPairs.length === 0 ? (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-tinta-4">
             Ninguna dupla jugó todavía {MIN_PAIR_MATCHES} partidos juntas. Hasta entonces no tiene
             sentido rankearlas: una que ganó su único partido encabezaría la tabla.
           </p>
@@ -72,13 +72,13 @@ export function RankingScreen() {
             {topPairs.map((p) => (
               <li
                 key={p.players.join('|')}
-                className="flex items-center justify-between rounded-xl bg-slate-800 p-3"
+                className="flex items-center justify-between rounded-xl bg-tarjeta p-3"
               >
-                <span className="font-medium text-slate-100">
+                <span className="font-medium text-tinta">
                   {p.players.map((id) => playerName(players, id)).join(' / ')}
                 </span>
-                <span className="tabular text-sm text-slate-400">
-                  {p.won}-{p.lost} · <strong className="text-emerald-400">{pct(p.winRate)}</strong>
+                <span className="tabular text-sm text-tinta-3">
+                  {p.won}-{p.lost} · <strong className="text-acento-vivo">{pct(p.winRate)}</strong>
                 </span>
               </li>
             ))}

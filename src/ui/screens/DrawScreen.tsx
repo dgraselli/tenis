@@ -72,11 +72,11 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
               onClick={() => setStrategy(s)}
               className={[
                 'w-full rounded-xl border-2 p-3 text-left transition',
-                strategy === s ? 'border-emerald-500 bg-slate-800' : 'border-slate-800',
+                strategy === s ? 'border-acento bg-tarjeta' : 'border-borde',
               ].join(' ')}
             >
-              <span className="font-semibold text-slate-100">{STRATEGY_LABELS[s]}</span>
-              <p className="mt-1 text-sm text-slate-500">{STRATEGY_HINTS[s]}</p>
+              <span className="font-semibold text-tinta">{STRATEGY_LABELS[s]}</span>
+              <p className="mt-1 text-sm text-tinta-4">{STRATEGY_HINTS[s]}</p>
             </button>
           ))}
         </div>
@@ -86,7 +86,7 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
         type="button"
         disabled={session.present.length < 2}
         onClick={() => draw(strategy)}
-        className="min-h-14 w-full rounded-xl bg-emerald-500 text-lg font-bold text-emerald-950 disabled:opacity-30"
+        className="min-h-14 w-full rounded-xl bg-acento text-lg font-bold text-acento-tinta disabled:opacity-30"
       >
         Sortear
       </button>
@@ -95,21 +95,21 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
         <section>
           <Titulo>Cruces</Titulo>
           {active !== null && (
-            <p className="mb-2 text-sm text-amber-400">
+            <p className="mb-2 text-sm text-aviso-vivo">
               Hay un partido en curso. Terminalo o salí de él antes de empezar otro.
             </p>
           )}
 
           <ul className="space-y-3">
             {session.lastDraw.matches.map((m, i) => (
-              <li key={i} className="rounded-xl bg-slate-800 p-3">
+              <li key={i} className="rounded-xl bg-tarjeta p-3">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="truncate font-medium text-slate-100">
+                    <p className="truncate font-medium text-tinta">
                       {m.sideA.map((id) => playerName(players, id)).join(' / ')}
                     </p>
-                    <p className="my-1 text-xs uppercase tracking-wide text-slate-600">contra</p>
-                    <p className="truncate font-medium text-slate-100">
+                    <p className="my-1 text-xs uppercase tracking-wide text-tinta-5">contra</p>
+                    <p className="truncate font-medium text-tinta">
                       {m.sideB.map((id) => playerName(players, id)).join(' / ')}
                     </p>
                   </div>
@@ -117,20 +117,20 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
                     type="button"
                     disabled={active !== null}
                     onClick={() => jugar(m)}
-                    className="min-h-12 shrink-0 rounded-lg bg-emerald-500 px-5 font-bold text-emerald-950 disabled:opacity-30"
+                    className="min-h-12 shrink-0 rounded-lg bg-acento px-5 font-bold text-acento-tinta disabled:opacity-30"
                   >
                     Jugar
                   </button>
                 </div>
                 {m.format === 'singles' && (
-                  <p className="mt-2 text-xs text-slate-500">Singles: sobraban dos.</p>
+                  <p className="mt-2 text-xs text-tinta-4">Singles: sobraban dos.</p>
                 )}
               </li>
             ))}
           </ul>
 
           {session.lastDraw.resting.length > 0 && (
-            <p className="mt-3 text-sm text-slate-400">
+            <p className="mt-3 text-sm text-tinta-3">
               Descansa <strong>{session.lastDraw.resting.map((id) => playerName(players, id)).join(', ')}</strong>.
               En la próxima ronda le toca a otra.
             </p>
@@ -141,18 +141,18 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
       <button
         type="button"
         onClick={reset}
-        className="min-h-12 w-full rounded-xl text-sm text-slate-500"
+        className="min-h-12 w-full rounded-xl text-sm text-tinta-4"
       >
         Reiniciar la jornada
       </button>
 
       {pendiente !== null && rules !== null && (
-        <div className="fixed inset-0 z-10 flex items-end justify-center bg-slate-950/80 p-4 sm:items-center">
-          <div className="max-h-full w-full max-w-md space-y-4 overflow-y-auto rounded-2xl bg-slate-900 p-4">
+        <div className="fixed inset-0 z-10 flex items-end justify-center bg-fondo/80 p-4 sm:items-center">
+          <div className="max-h-full w-full max-w-md space-y-4 overflow-y-auto rounded-2xl bg-panel p-4">
             <div>
               <Titulo>Formato de juego</Titulo>
-              <p className="text-sm text-slate-400">
-                {nombres(pendiente.sideA)} <span className="text-slate-600">contra</span>{' '}
+              <p className="text-sm text-tinta-3">
+                {nombres(pendiente.sideA)} <span className="text-tinta-5">contra</span>{' '}
                 {nombres(pendiente.sideB)}
               </p>
             </div>
@@ -163,14 +163,14 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
               type="button"
               disabled={validateRules(rules).length > 0}
               onClick={empezar}
-              className="min-h-14 w-full rounded-xl bg-emerald-500 text-lg font-bold text-emerald-950 disabled:opacity-30"
+              className="min-h-14 w-full rounded-xl bg-acento text-lg font-bold text-acento-tinta disabled:opacity-30"
             >
               Empezar partido
             </button>
             <button
               type="button"
               onClick={() => setPendiente(null)}
-              className="min-h-12 w-full rounded-xl text-sm text-slate-500"
+              className="min-h-12 w-full rounded-xl text-sm text-tinta-4"
             >
               Cancelar
             </button>

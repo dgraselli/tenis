@@ -26,17 +26,17 @@ export function ScoreScreen() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between gap-2 border-b border-slate-800 px-3 py-2">
+      <header className="flex items-center justify-between gap-2 border-b border-borde px-3 py-2">
         <div className="min-w-0">
-          <p className="truncate text-xs text-slate-500">{describeRules(rules)}</p>
-          {subtitulo && <p className="text-sm font-semibold text-emerald-400">{subtitulo}</p>}
+          <p className="truncate text-xs text-tinta-4">{describeRules(rules)}</p>
+          {subtitulo && <p className="text-sm font-semibold text-acento-vivo">{subtitulo}</p>}
         </div>
         <div className="flex shrink-0 gap-2">
           <button
             type="button"
             onClick={undoPoint}
             disabled={!canUndo(active.live)}
-            className="min-h-11 rounded-lg bg-slate-800 px-4 text-sm font-medium text-slate-200 disabled:opacity-30"
+            className="min-h-11 rounded-lg bg-tarjeta px-4 text-sm font-medium text-tinta disabled:opacity-30"
           >
             Deshacer
           </button>
@@ -45,7 +45,7 @@ export function ScoreScreen() {
             onClick={() => {
               if (confirm('¿Descartar este partido sin guardarlo?')) discard()
             }}
-            className="min-h-11 rounded-lg px-3 text-sm text-slate-500"
+            className="min-h-11 rounded-lg px-3 text-sm text-tinta-4"
           >
             Salir
           </button>
@@ -61,20 +61,20 @@ export function ScoreScreen() {
             onClick={() => point(side)}
             className={[
               'flex flex-1 items-center justify-between gap-4 px-6 transition',
-              side === 'A' ? 'bg-slate-900' : 'bg-slate-950',
-              'enabled:active:bg-emerald-900',
+              side === 'A' ? 'bg-panel' : 'bg-fondo',
+              'enabled:active:bg-acento-fondo',
             ].join(' ')}
           >
             <div className="min-w-0 text-left">
-              <div className="truncate text-xl font-semibold text-slate-100">{nameOf(side)}</div>
-              <div className="tabular mt-1 text-5xl font-bold text-slate-300">
+              <div className="truncate text-xl font-semibold text-tinta">{nameOf(side)}</div>
+              <div className="tabular mt-1 text-5xl font-bold text-tinta-2">
                 {status.games[side]}
               </div>
-              <div className="mt-1 text-xs uppercase tracking-wide text-slate-600">games</div>
+              <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">games</div>
             </div>
 
             {status.current && (
-              <div className="tabular text-7xl font-black text-emerald-400">
+              <div className="tabular text-7xl font-black text-acento-vivo">
                 {formatPoint(status.current, side)}
               </div>
             )}
@@ -83,25 +83,25 @@ export function ScoreScreen() {
       </div>
 
       {status.finished && status.winner && (
-        <div className="border-t-2 border-emerald-500 bg-slate-900 p-4">
+        <div className="border-t-2 border-acento bg-panel p-4">
           <p className="text-center text-lg">
-            Ganó <strong className="text-emerald-400">{nameOf(status.winner)}</strong>
+            Ganó <strong className="text-acento-vivo">{nameOf(status.winner)}</strong>
           </p>
-          <p className="tabular mt-1 text-center text-3xl font-bold text-slate-100">
+          <p className="tabular mt-1 text-center text-3xl font-bold text-tinta">
             {formatFinalScore(status, status.winner)}
           </p>
           <div className="mt-4 flex gap-3">
             <button
               type="button"
               onClick={undoPoint}
-              className="min-h-14 flex-1 rounded-xl bg-slate-800 font-medium text-slate-200"
+              className="min-h-14 flex-1 rounded-xl bg-tarjeta font-medium text-tinta"
             >
               Me equivoqué
             </button>
             <button
               type="button"
               onClick={save}
-              className="min-h-14 flex-[2] rounded-xl bg-emerald-500 text-lg font-bold text-emerald-950"
+              className="min-h-14 flex-[2] rounded-xl bg-acento text-lg font-bold text-acento-tinta"
             >
               Guardar
             </button>

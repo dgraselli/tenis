@@ -104,13 +104,13 @@ export function NewMatchScreen() {
               onClick={() => setSelecting(side)}
               className={[
                 'min-h-24 rounded-xl border-2 p-3 text-left transition',
-                selecting === side ? 'border-emerald-500 bg-slate-800' : 'border-slate-700',
+                selecting === side ? 'border-acento bg-tarjeta' : 'border-borde-2',
               ].join(' ')}
             >
-              <span className="text-xs uppercase tracking-wide text-slate-500">Lado {side}</span>
-              <div className="mt-1 text-lg font-semibold text-slate-100">
+              <span className="text-xs uppercase tracking-wide text-tinta-4">Lado {side}</span>
+              <div className="mt-1 text-lg font-semibold text-tinta">
                 {ids.length === 0 ? (
-                  <span className="text-slate-600">Elegí {capacity}</span>
+                  <span className="text-tinta-5">Elegí {capacity}</span>
                 ) : (
                   ids.map(nameOf).join(' / ')
                 )}
@@ -142,7 +142,7 @@ export function NewMatchScreen() {
         type="button"
         disabled={!listo}
         onClick={() => start(sideA, sideB, rules)}
-        className="min-h-14 w-full rounded-xl bg-emerald-500 text-lg font-bold text-emerald-950 disabled:opacity-30"
+        className="min-h-14 w-full rounded-xl bg-acento text-lg font-bold text-acento-tinta disabled:opacity-30"
       >
         Empezar partido
       </button>

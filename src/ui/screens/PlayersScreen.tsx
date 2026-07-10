@@ -29,13 +29,13 @@ export function PlayersScreen() {
             onChange={(e) => setNombre(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && agregar()}
             placeholder="Nombre"
-            className="min-h-12 flex-1 rounded-lg bg-slate-800 px-4 text-slate-100 placeholder:text-slate-600"
+            className="min-h-12 flex-1 rounded-lg bg-tarjeta px-4 text-tinta placeholder:text-tinta-5"
           />
           <button
             type="button"
             onClick={agregar}
             disabled={nombre.trim() === ''}
-            className="min-h-12 rounded-lg bg-emerald-500 px-5 font-bold text-emerald-950 disabled:opacity-30"
+            className="min-h-12 rounded-lg bg-acento px-5 font-bold text-acento-tinta disabled:opacity-30"
           >
             Agregar
           </button>
@@ -48,19 +48,19 @@ export function PlayersScreen() {
           {activas.map((p) => {
             const s = statsOf(p.id)
             return (
-              <li key={p.id} className="flex items-center gap-3 rounded-xl bg-slate-800 p-3">
+              <li key={p.id} className="flex items-center gap-3 rounded-xl bg-tarjeta p-3">
                 <input
                   value={p.name}
                   onChange={(e) => rename(p.id, e.target.value)}
-                  className="min-w-0 flex-1 bg-transparent text-lg text-slate-100 outline-none"
+                  className="min-w-0 flex-1 bg-transparent text-lg text-tinta outline-none"
                 />
-                <span className="tabular shrink-0 text-sm text-slate-500">
+                <span className="tabular shrink-0 text-sm text-tinta-4">
                   {s ? `${s.played} PJ · ${Math.round(s.rating)}` : '—'}
                 </span>
                 <button
                   type="button"
                   onClick={() => setActive(p.id, false)}
-                  className="min-h-10 shrink-0 rounded-lg px-3 text-sm text-slate-500"
+                  className="min-h-10 shrink-0 rounded-lg px-3 text-sm text-tinta-4"
                 >
                   Dar de baja
                 </button>
@@ -69,27 +69,27 @@ export function PlayersScreen() {
           })}
         </ul>
         {activas.length === 0 && (
-          <p className="text-sm text-slate-500">Todavía no hay ninguna jugadora.</p>
+          <p className="text-sm text-tinta-4">Todavía no hay ninguna jugadora.</p>
         )}
       </section>
 
       {inactivas.length > 0 && (
         <section>
           <Titulo>Dadas de baja</Titulo>
-          <p className="mb-2 text-xs text-slate-600">
+          <p className="mb-2 text-xs text-tinta-5">
             No se borran nunca: sus partidos siguen contando en el historial.
           </p>
           <ul className="space-y-2">
             {inactivas.map((p) => (
               <li
                 key={p.id}
-                className="flex items-center justify-between rounded-xl bg-slate-900 p-3 text-slate-500"
+                className="flex items-center justify-between rounded-xl bg-panel p-3 text-tinta-4"
               >
                 <span>{p.name}</span>
                 <button
                   type="button"
                   onClick={() => setActive(p.id, true)}
-                  className="min-h-10 rounded-lg px-3 text-sm text-emerald-400"
+                  className="min-h-10 rounded-lg px-3 text-sm text-acento-vivo"
                 >
                   Reactivar
                 </button>

@@ -31,19 +31,19 @@ function MatchCard({ match, nameOf }: { match: StoredMatch; nameOf: (id: string)
   const side = (s: Side) => match.sides[s].players.map(nameOf).join(' / ')
 
   return (
-    <article className="rounded-xl bg-slate-800 p-4">
+    <article className="rounded-xl bg-tarjeta p-4">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="text-xs text-slate-500">{formatDate(match.playedAt)}</span>
+        <span className="text-xs text-tinta-4">{formatDate(match.playedAt)}</span>
         {/* Las reglas están congeladas en el partido: cada uno muestra su propio formato. */}
-        <span className="text-xs text-slate-500">{describeRules(match.rules)}</span>
+        <span className="text-xs text-tinta-4">{describeRules(match.rules)}</span>
       </div>
 
       <div className="mt-2 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate font-semibold text-emerald-400">{side(winner)}</p>
-          <p className="truncate text-slate-400">{side(loser)}</p>
+          <p className="truncate font-semibold text-acento-vivo">{side(winner)}</p>
+          <p className="truncate text-tinta-3">{side(loser)}</p>
         </div>
-        <p className="tabular shrink-0 text-2xl font-bold text-slate-100">
+        <p className="tabular shrink-0 text-2xl font-bold text-tinta">
           {formatFinalScore(match.result, winner)}
         </p>
       </div>

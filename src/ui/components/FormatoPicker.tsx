@@ -27,7 +27,7 @@ export function FormatoPicker({
         ))}
       </div>
 
-      <label className="mt-3 flex items-center gap-3 text-sm text-slate-400">
+      <label className="mt-3 flex items-center gap-3 text-sm text-tinta-3">
         Otro largo de set:
         <input
           type="number"
@@ -36,26 +36,26 @@ export function FormatoPicker({
           max={20}
           value={rules.gamesToWinSet}
           onChange={(e) => onChange(rulesForGames(Number(e.target.value)))}
-          className="tabular w-20 rounded-lg bg-slate-800 px-3 py-2 text-center text-slate-100"
+          className="tabular w-20 rounded-lg bg-tarjeta px-3 py-2 text-center text-tinta"
         />
         games
       </label>
 
-      <label className="mt-3 flex items-center gap-3 text-sm text-slate-400">
+      <label className="mt-3 flex items-center gap-3 text-sm text-tinta-3">
         <input
           type="checkbox"
           checked={rules.tiebreakAt !== null}
           onChange={(e) =>
             onChange({ ...rules, tiebreakAt: e.target.checked ? rules.gamesToWinSet : null })
           }
-          className="size-5 accent-emerald-500"
+          className="size-5 accent-acento"
         />
         Con tie-break
       </label>
 
-      <p className="mt-2 text-sm text-slate-500">{describeRules(rules)}</p>
+      <p className="mt-2 text-sm text-tinta-4">{describeRules(rules)}</p>
       {errors.map((e) => (
-        <p key={e} className="mt-1 text-sm text-rose-400">
+        <p key={e} className="mt-1 text-sm text-peligro">
           {e}
         </p>
       ))}

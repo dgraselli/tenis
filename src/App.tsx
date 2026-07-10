@@ -17,26 +17,26 @@ const TITLES: Record<View, string> = {
   ranking: 'Ranking',
   historial: 'Historial',
   jugadoras: 'Jugadoras',
-  ajustes: 'Control remoto',
+  ajustes: 'Ajustes',
 }
 
 export default function App() {
   const [view, setView] = useState<View>('partido')
-  const { saveError } = useStore()
+  const { db, saveError } = useStore()
 
   return (
-    <div className="flex h-full flex-col bg-slate-950 text-slate-100">
-      <header className="flex shrink-0 items-center justify-between border-b border-slate-800 px-4 pt-[env(safe-area-inset-top)]">
-        <h1 className="py-3 text-sm font-semibold uppercase tracking-widest text-slate-400">
+    <div data-theme={db.settings.theme} className="flex h-full flex-col bg-fondo text-tinta">
+      <header className="flex shrink-0 items-center justify-between border-b border-borde px-4 pt-[env(safe-area-inset-top)]">
+        <h1 className="py-3 text-sm font-semibold uppercase tracking-widest text-tinta-3">
           {TITLES[view]}
         </h1>
         <button
           type="button"
           onClick={() => setView(view === 'ajustes' ? 'partido' : 'ajustes')}
-          aria-label="Control remoto"
+          aria-label="Ajustes"
           className={[
             'min-h-11 rounded-lg px-3 text-lg',
-            view === 'ajustes' ? 'text-emerald-400' : 'text-slate-500',
+            view === 'ajustes' ? 'text-acento-vivo' : 'text-tinta-4',
           ].join(' ')}
         >
           ⚙
@@ -44,7 +44,7 @@ export default function App() {
       </header>
 
       {saveError && (
-        <p className="shrink-0 bg-rose-900 px-4 py-2 text-sm text-rose-100">{saveError}</p>
+        <p className="shrink-0 bg-peligro-fondo px-4 py-2 text-sm text-peligro-tinta">{saveError}</p>
       )}
 
       <main className="flex flex-1 flex-col overflow-hidden">

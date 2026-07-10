@@ -1,5 +1,140 @@
 @import 'tailwindcss';
 
+/*
+ * Colores semánticos: las pantallas usan estos nombres (bg-fondo, text-tinta,
+ * bg-acento...) y cada tema les da valor. `inline` hace que la utilidad emita
+ * var(--tema-*), así el tema se resuelve donde esté el data-theme.
+ */
+@theme inline {
+  --color-fondo: var(--tema-fondo);
+  --color-panel: var(--tema-panel);
+  --color-tarjeta: var(--tema-tarjeta);
+  --color-chip: var(--tema-chip);
+  --color-chip-activo: var(--tema-chip-activo);
+  --color-borde: var(--tema-borde);
+  --color-borde-2: var(--tema-borde-2);
+  --color-tinta: var(--tema-tinta);
+  --color-tinta-2: var(--tema-tinta-2);
+  --color-tinta-3: var(--tema-tinta-3);
+  --color-tinta-4: var(--tema-tinta-4);
+  --color-tinta-5: var(--tema-tinta-5);
+  --color-acento: var(--tema-acento);
+  --color-acento-tinta: var(--tema-acento-tinta);
+  --color-acento-vivo: var(--tema-acento-vivo);
+  --color-acento-fondo: var(--tema-acento-fondo);
+  --color-aviso: var(--tema-aviso);
+  --color-aviso-tinta: var(--tema-aviso-tinta);
+  --color-aviso-vivo: var(--tema-aviso-vivo);
+  --color-peligro: var(--tema-peligro);
+  --color-peligro-fondo: var(--tema-peligro-fondo);
+  --color-peligro-tinta: var(--tema-peligro-tinta);
+}
+
+/* Oscuro: el original. Sobrio, no encandila de noche. */
+:root,
+[data-theme='oscuro'] {
+  --tema-fondo: #020617;
+  --tema-panel: #0f172a;
+  --tema-tarjeta: #1e293b;
+  --tema-chip: #334155;
+  --tema-chip-activo: #475569;
+  --tema-borde: #1e293b;
+  --tema-borde-2: #334155;
+  --tema-tinta: #f1f5f9;
+  --tema-tinta-2: #cbd5e1;
+  --tema-tinta-3: #94a3b8;
+  --tema-tinta-4: #64748b;
+  --tema-tinta-5: #475569;
+  --tema-acento: #10b981;
+  --tema-acento-tinta: #022c22;
+  --tema-acento-vivo: #34d399;
+  --tema-acento-fondo: #064e3b;
+  --tema-aviso: #fbbf24;
+  --tema-aviso-tinta: #451a03;
+  --tema-aviso-vivo: #fbbf24;
+  --tema-peligro: #fb7185;
+  --tema-peligro-fondo: #881337;
+  --tema-peligro-tinta: #ffe4e6;
+}
+
+/* Claro: para pleno sol. */
+[data-theme='claro'] {
+  --tema-fondo: #f1f5f9;
+  --tema-panel: #ffffff;
+  --tema-tarjeta: #e2e8f0;
+  --tema-chip: #cbd5e1;
+  --tema-chip-activo: #94a3b8;
+  --tema-borde: #e2e8f0;
+  --tema-borde-2: #cbd5e1;
+  --tema-tinta: #0f172a;
+  --tema-tinta-2: #1e293b;
+  --tema-tinta-3: #334155;
+  --tema-tinta-4: #64748b;
+  --tema-tinta-5: #94a3b8;
+  --tema-acento: #059669;
+  --tema-acento-tinta: #ffffff;
+  --tema-acento-vivo: #047857;
+  --tema-acento-fondo: #a7f3d0;
+  --tema-aviso: #f59e0b;
+  --tema-aviso-tinta: #451a03;
+  --tema-aviso-vivo: #b45309;
+  --tema-peligro: #e11d48;
+  --tema-peligro-fondo: #ffe4e6;
+  --tema-peligro-tinta: #881337;
+}
+
+/* Canchero: polvo de ladrillo y atardecer, con rosa que pega fuerte. */
+[data-theme='canchero'] {
+  --tema-fondo: #fff7ed;
+  --tema-panel: #ffedd5;
+  --tema-tarjeta: #fed7aa;
+  --tema-chip: #fdba74;
+  --tema-chip-activo: #fb923c;
+  --tema-borde: #fed7aa;
+  --tema-borde-2: #fdba74;
+  --tema-tinta: #431407;
+  --tema-tinta-2: #7c2d12;
+  --tema-tinta-3: #9a3412;
+  --tema-tinta-4: #c2410c;
+  --tema-tinta-5: #ea580c;
+  --tema-acento: #db2777;
+  --tema-acento-tinta: #fdf2f8;
+  --tema-acento-vivo: #be185d;
+  --tema-acento-fondo: #fbcfe8;
+  --tema-aviso: #8b5cf6;
+  --tema-aviso-tinta: #ffffff;
+  --tema-aviso-vivo: #6d28d9;
+  --tema-peligro: #dc2626;
+  --tema-peligro-fondo: #fee2e2;
+  --tema-peligro-tinta: #7f1d1d;
+}
+
+/* Alto contraste: negro y amarillo bien fuertes, se lee desde el fondo de la cancha. */
+[data-theme='contraste'] {
+  --tema-fondo: #000000;
+  --tema-panel: #000000;
+  --tema-tarjeta: #262626;
+  --tema-chip: #333333;
+  --tema-chip-activo: #4d4d4d;
+  --tema-borde: #ffffff;
+  --tema-borde-2: #ffffff;
+  --tema-tinta: #ffffff;
+  --tema-tinta-2: #ffffff;
+  --tema-tinta-3: #ffffff;
+  --tema-tinta-4: #e5e5e5;
+  --tema-tinta-5: #cccccc;
+  --tema-acento: #ffe600;
+  --tema-acento-tinta: #000000;
+  --tema-acento-vivo: #ffe600;
+  --tema-acento-fondo: #4d4400;
+  --tema-aviso: #ff9900;
+  --tema-aviso-tinta: #000000;
+  --tema-aviso-vivo: #ffb84d;
+  --tema-peligro: #ff6666;
+  --tema-peligro-fondo: #660000;
+  --tema-peligro-tinta: #ffffff;
+}
+
 html,
 body,
 #root {

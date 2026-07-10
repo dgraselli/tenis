@@ -15,8 +15,8 @@ export function PlayerChip({ name, selected = false, disabled = false, onClick }
         'min-h-12 rounded-full px-4 py-2 text-base font-medium transition',
         'disabled:opacity-35',
         selected
-          ? 'bg-emerald-500 text-emerald-950'
-          : 'bg-slate-700 text-slate-100 enabled:active:bg-slate-600',
+          ? 'bg-acento text-acento-tinta'
+          : 'bg-chip text-tinta enabled:active:bg-chip-activo',
       ].join(' ')}
     >
       {name}
