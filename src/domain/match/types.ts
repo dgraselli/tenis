@@ -1,6 +1,7 @@
 import type { LiveMatch } from '../scoring/liveMatch'
 import type { MatchRules, Side } from '../scoring/types'
 import type { PlayerId } from '../players/types'
+import { elapsedSeconds } from '../../lib/duration'
 
 export type MatchFormat = 'singles' | 'doubles'
 
@@ -26,6 +27,8 @@ export interface StoredMatch {
   sides: Record<Side, MatchSide>
   result: MatchResult
   playedAt: string
+  /** Tiempo de juego. Los partidos anteriores a este campo no lo tienen. */
+  durationSeconds?: number
   pointLog?: Side[]
 }
 
@@ -69,6 +72,7 @@ export function finishMatch(active: ActiveMatch, playedAt = new Date().toISOStri
       winner: status.winner,
     },
     playedAt,
+    durationSeconds: elapsedSeconds(active.startedAt, new Date(playedAt).getTime()),
     pointLog: active.live.pointLog,
   }
 }
