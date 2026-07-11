@@ -3,6 +3,7 @@ import { usePlayers } from '../../app/usePlayers'
 import type { StoredMatch } from '../../domain/match/types'
 import { playerName } from '../../domain/players/types'
 import { describeRules, formatFinalScore } from '../../domain/scoring/format'
+import { formatDuration } from '../../lib/duration'
 import type { Side } from '../../domain/scoring/types'
 import { Vacio } from '../components/Vacio'
 
@@ -33,7 +34,10 @@ function MatchCard({ match, nameOf }: { match: StoredMatch; nameOf: (id: string)
   return (
     <article className="rounded-xl bg-tarjeta p-4">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="text-xs text-tinta-4">{formatDate(match.playedAt)}</span>
+        <span className="text-xs text-tinta-4">
+          {formatDate(match.playedAt)}
+          {match.durationSeconds !== undefined && ` · ${formatDuration(match.durationSeconds)}`}
+        </span>
         {/* Las reglas están congeladas en el partido: cada uno muestra su propio formato. */}
         <span className="text-xs text-tinta-4">{describeRules(match.rules)}</span>
       </div>

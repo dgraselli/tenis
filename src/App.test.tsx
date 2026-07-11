@@ -65,6 +65,8 @@ describe('la app de punta a punta', () => {
     await empezarSingles(user)
 
     expect(screen.getByText('Set a 4 games')).toBeInTheDocument()
+    // El cronómetro arranca junto con el partido.
+    expect(screen.getByText(/^\d+:\d{2}$/)).toBeInTheDocument()
 
     // 16 puntos limpios de Ana: cuatro games a cero.
     for (let i = 0; i < 16; i++) await user.click(half('Ana'))
@@ -82,6 +84,8 @@ describe('la app de punta a punta', () => {
     expect(within(tarjeta).getByText('4-0')).toBeInTheDocument()
     expect(within(tarjeta).getByText('Ana')).toBeInTheDocument()
     expect(within(tarjeta).getByText('Set a 4 games')).toBeInTheDocument()
+    // El tiempo de juego queda junto a la fecha (acá el mínimo: 1 min).
+    expect(within(tarjeta).getByText(/· 1 min/)).toBeInTheDocument()
 
     await user.click(tab('Ranking'))
     const filaAna = screen.getByRole('row', { name: /Ana/ })
