@@ -25,6 +25,13 @@ pnpm build     # typecheck + build de producción
 pnpm preview   # sirve el build, con service worker activo
 ```
 
+## Configuración
+
+- `VITE_FEEDBACK_URL`: URL de un formulario externo (ej. Tally) para dejar feedback desde
+  Ajustes. Vacía o ausente, la opción no aparece. En producción sale de la variable
+  `FEEDBACK_URL` del repo (Settings → Secrets and variables → Actions → Variables); en
+  desarrollo, de un `.env.local` (ver `.env.example`).
+
 ## Cómo está armado
 
 Tres anillos, con las dependencias apuntando en una sola dirección:

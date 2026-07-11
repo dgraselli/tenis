@@ -5,6 +5,7 @@ import { COMMAND_LABELS, DEFAULT_BINDINGS, bindKey } from '../../domain/remote/t
 import type { Command } from '../../domain/remote/types'
 import { THEMES, THEME_HINTS, THEME_LABELS } from '../../domain/theme/types'
 import type { ThemeId } from '../../domain/theme/types'
+import { Feedback } from '../components/Feedback'
 import { Titulo } from '../components/Vacio'
 
 const COMMANDS: Command[] = ['point:A', 'point:B', 'undo']
@@ -123,6 +124,8 @@ export function RemoteScreen() {
           sus toques a una página web sin una app nativa de por medio.
         </p>
       </section>
+
+      <Feedback />
     </div>
   )
 }

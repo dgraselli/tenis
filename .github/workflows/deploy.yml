@@ -22,6 +22,10 @@ jobs:
     env:
       # La app se publica bajo https://dgraselli.github.io/tenis/
       BASE_PATH: /tenis/
+      # Formulario de feedback. Se configura como variable del repo:
+      # Settings → Secrets and variables → Actions → Variables → FEEDBACK_URL.
+      # Sin la variable, la opción simplemente no aparece en la app.
+      VITE_FEEDBACK_URL: ${{ vars.FEEDBACK_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
