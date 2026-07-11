@@ -6,6 +6,8 @@ describe('Feedback', () => {
   afterEach(() => vi.unstubAllEnvs())
 
   it('sin formulario configurado no muestra nada', () => {
+    // Fijado explícitamente: en CI la variable real existe y llega a los tests.
+    vi.stubEnv('VITE_FEEDBACK_URL', '')
     const { container } = render(<Feedback />)
     expect(container).toBeEmptyDOMElement()
   })
