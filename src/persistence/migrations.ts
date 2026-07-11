@@ -22,6 +22,12 @@ export const MIGRATIONS: Record<number, Migration> = {
       settings: { ...settings, lastRules: { singles: old, doubles: old } },
     }
   },
+  // v3 agrega quién saca primero al partido en curso. Para uno que venía de
+  // antes no se sabe: se asume el lado A, que era el default visual.
+  2: (raw) => {
+    if (!isRecord(raw.activeMatch)) return raw
+    return { ...raw, activeMatch: { firstServer: 'A', ...raw.activeMatch } }
+  },
 }
 
 /**

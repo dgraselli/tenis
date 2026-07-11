@@ -13,7 +13,7 @@ export function useMatch() {
   const active = db.activeMatch
 
   const start = useCallback(
-    (sideA: PlayerId[], sideB: PlayerId[], rules: MatchRules) => {
+    (sideA: PlayerId[], sideB: PlayerId[], rules: MatchRules, firstServer: Side = 'A') => {
       const sides = {
         A: { players: sideA as MatchSide['players'] },
         B: { players: sideB as MatchSide['players'] },
@@ -26,6 +26,7 @@ export function useMatch() {
           format,
           sides,
           startedAt: new Date().toISOString(),
+          firstServer,
           live: startLiveMatch(rules),
         },
         // El último formato usado queda de default para el próximo partido de esa modalidad.

@@ -38,6 +38,8 @@ export interface ActiveMatch {
   format: MatchFormat
   sides: Record<Side, MatchSide>
   startedAt: string
+  /** Quién sacó primero: con esto el saque se deriva del marcador. */
+  firstServer: Side
   live: LiveMatch
 }
 

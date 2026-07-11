@@ -4,7 +4,7 @@ import { useMatch } from '../../app/useMatch'
 import { usePlayers } from '../../app/usePlayers'
 import type { PlayerId } from '../../domain/players/types'
 import { validateRules } from '../../domain/scoring/types'
-import type { MatchRules } from '../../domain/scoring/types'
+import type { MatchRules, Side } from '../../domain/scoring/types'
 import { FormatoPicker } from '../components/FormatoPicker'
 import { PlayerChip } from '../components/PlayerChip'
 import { Opcion, Titulo, Vacio } from '../components/Vacio'
@@ -21,6 +21,7 @@ export function NewMatchScreen() {
   const [sideA, setSideA] = useState<PlayerId[]>([])
   const [sideB, setSideB] = useState<PlayerId[]>([])
   const [selecting, setSelecting] = useState<'A' | 'B'>('A')
+  const [saca, setSaca] = useState<Side>('A')
 
   const capacity = modalidad === 'doubles' ? 2 : 1
   const errors = validateRules(rules)
@@ -64,6 +65,7 @@ export function NewMatchScreen() {
     setSideA([])
     setSideB([])
     setSelecting('A')
+    setSaca('A')
   }
 
   if (players.length < 2) {
@@ -121,6 +123,20 @@ export function NewMatchScreen() {
       </section>
 
       <section>
+        <Titulo>Saca primero</Titulo>
+        <div className="flex gap-2">
+          {(['A', 'B'] as const).map((side) => {
+            const ids = side === 'A' ? sideA : sideB
+            return (
+              <Opcion key={side} activa={saca === side} onClick={() => setSaca(side)}>
+                🎾 {ids.length > 0 ? ids.map(nameOf).join(' / ') : `Lado ${side}`}
+              </Opcion>
+            )
+          })}
+        </div>
+      </section>
+
+      <section>
         <Titulo>Jugadoras</Titulo>
         <div className="flex flex-wrap gap-2">
           {players.map((p) => {
@@ -141,7 +157,7 @@ export function NewMatchScreen() {
       <button
         type="button"
         disabled={!listo}
-        onClick={() => start(sideA, sideB, rules)}
+        onClick={() => start(sideA, sideB, rules, saca)}
         className="min-h-14 w-full rounded-xl bg-acento text-lg font-bold text-acento-tinta disabled:opacity-30"
       >
         Empezar partido

@@ -71,6 +71,16 @@ describe('createLocalStorageRepo', () => {
     expect(db.settings.lastRules).toEqual({ singles: viejas, doubles: viejas })
   })
 
+  it('migra el partido en curso de v2 agregándole quién saca primero', () => {
+    storage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ schemaVersion: 2, players: [], matches: [], activeMatch: { id: 'm1' } }),
+    )
+
+    const db = createLocalStorageRepo(storage).load()
+    expect(db.activeMatch).toMatchObject({ id: 'm1', firstServer: 'A' })
+  })
+
   it('con datos de una versión más nueva no los pisa: los archiva', () => {
     const futuro = JSON.stringify({ schemaVersion: 99, players: [{ id: 'p1' }] })
     storage.setItem(STORAGE_KEY, futuro)

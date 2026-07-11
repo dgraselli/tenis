@@ -8,7 +8,7 @@ import type { Side } from '../../domain/scoring/types'
 import { Vacio } from '../components/Vacio'
 
 export function HistoryScreen() {
-  const { db } = useStore()
+  const { db, update } = useStore()
   const { players } = usePlayers()
 
   if (db.matches.length === 0) {
@@ -17,16 +17,38 @@ export function HistoryScreen() {
 
   const recientes = [...db.matches].sort((a, b) => b.playedAt.localeCompare(a.playedAt))
 
+  // El ranking y las estadísticas se derivan de los partidos: al eliminar
+  // uno deja de contar en todos lados, sin nada más que actualizar.
+  const eliminar = (id: string) =>
+    update((d) => ({ ...d, matches: d.matches.filter((m) => m.id !== id) }))
+
   return (
     <div className="flex-1 space-y-3 overflow-y-auto p-4">
       {recientes.map((match) => (
-        <MatchCard key={match.id} match={match} nameOf={(id) => playerName(players, id)} />
+        <MatchCard
+          key={match.id}
+          match={match}
+          nameOf={(id) => playerName(players, id)}
+          onDelete={() => {
+            if (confirm('¿Eliminar este partido? Deja de contar para el ranking y las estadísticas.')) {
+              eliminar(match.id)
+            }
+          }}
+        />
       ))}
     </div>
   )
 }
 
-function MatchCard({ match, nameOf }: { match: StoredMatch; nameOf: (id: string) => string }) {
+function MatchCard({
+  match,
+  nameOf,
+  onDelete,
+}: {
+  match: StoredMatch
+  nameOf: (id: string) => string
+  onDelete: () => void
+}) {
   const winner = match.result.winner
   const loser: Side = winner === 'A' ? 'B' : 'A'
   const side = (s: Side) => match.sides[s].players.map(nameOf).join(' / ')
@@ -50,6 +72,16 @@ function MatchCard({ match, nameOf }: { match: StoredMatch; nameOf: (id: string)
         <p className="tabular shrink-0 text-2xl font-bold text-tinta">
           {formatFinalScore(match.result, winner)}
         </p>
+      </div>
+
+      <div className="mt-2 flex justify-end">
+        <button
+          type="button"
+          onClick={onDelete}
+          className="min-h-11 rounded-lg px-3 text-sm text-peligro"
+        >
+          Eliminar
+        </button>
       </div>
     </article>
   )
