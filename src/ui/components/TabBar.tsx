@@ -6,7 +6,7 @@ const LABELS: Record<Tab, string> = {
   sorteo: 'Sorteo',
   ranking: 'Ranking',
   historial: 'Historial',
-  jugadoras: 'Jugadoras',
+  jugadoras: 'Jugadores',
 }
 
 export function TabBar({ value, onChange }: { value: string; onChange: (tab: Tab) => void }) {

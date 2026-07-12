@@ -22,7 +22,7 @@ export function PlayersScreen() {
   return (
     <div className="flex-1 space-y-6 overflow-y-auto p-4">
       <section>
-        <Titulo>Agregar jugadora</Titulo>
+        <Titulo>Agregar jugador</Titulo>
         <div className="flex gap-2">
           <input
             value={nombre}
@@ -69,13 +69,13 @@ export function PlayersScreen() {
           })}
         </ul>
         {activas.length === 0 && (
-          <p className="text-sm text-tinta-4">Todavía no hay ninguna jugadora.</p>
+          <p className="text-sm text-tinta-4">Todavía no hay ningún jugador.</p>
         )}
       </section>
 
       {inactivas.length > 0 && (
         <section>
-          <Titulo>Dadas de baja</Titulo>
+          <Titulo>Dados de baja</Titulo>
           <p className="mb-2 text-xs text-tinta-5">
             No se borran nunca: sus partidos siguen contando en el historial.
           </p>

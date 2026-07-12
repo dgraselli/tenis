@@ -66,43 +66,52 @@ export function ScoreScreen() {
             disabled={status.finished}
             onClick={() => point(side)}
             className={[
-              'flex flex-1 items-center gap-4 px-4 transition',
+              // En vertical los números van debajo del nombre, a lo ancho;
+              // en apaisado quedan a la derecha, como en un tablero.
+              'flex flex-1 gap-4 px-4 transition',
+              'portrait:flex-col portrait:justify-center portrait:gap-1',
+              'landscape:items-center',
               side === 'A' ? 'bg-panel' : 'bg-fondo',
               'enabled:active:bg-acento-fondo',
             ].join(' ')}
           >
-            <div className="flex min-w-0 flex-1 items-center gap-2 text-left">
-              <div className="truncate text-nombre font-semibold text-tinta">{nameOf(side)}</div>
+            <div className="flex min-w-0 items-center gap-3 text-left landscape:flex-1">
               {saca === side && (
                 <span className="shrink-0" title="Saca">
-                  {/* El círculo es la pelotita: quien lo tiene al lado, saca. */}
-                  <span aria-hidden className="block size-5 rounded-full bg-aviso-vivo" />
+                  {/* El triángulo apunta al nombre: ese lado saca. */}
+                  <span
+                    aria-hidden
+                    className="block size-0 border-y-[0.7rem] border-l-[1.1rem] border-y-transparent border-l-aviso-vivo"
+                  />
                   <span className="sr-only">Saca</span>
                 </span>
               )}
+              <div className="truncate text-nombre font-semibold text-tinta">{nameOf(side)}</div>
             </div>
 
-            {rules.setsToWin > 1 && (
-              <div className="shrink-0 text-center">
-                <div className="tabular font-marcador text-4xl font-bold leading-none text-tinta-4">
-                  {setsWon(status.sets, side)}
+            <div className="flex items-end justify-end gap-6 portrait:w-full portrait:justify-between">
+              {rules.setsToWin > 1 && (
+                <div className="shrink-0 text-center">
+                  <div className="tabular font-marcador text-5xl font-bold leading-none text-tinta-4">
+                    {setsWon(status.sets, side)}
+                  </div>
+                  <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">sets</div>
                 </div>
-                <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">sets</div>
-              </div>
-            )}
+              )}
 
-            <div className="shrink-0 text-center">
-              <div className="tabular font-marcador text-games font-bold leading-none text-tinta-2">
-                {status.games[side]}
+              <div className="shrink-0 text-center">
+                <div className="tabular font-marcador text-games font-bold leading-none text-tinta-2">
+                  {status.games[side]}
+                </div>
+                <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">games</div>
               </div>
-              <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">games</div>
+
+              {status.current && (
+                <div className="tabular font-marcador min-w-[2ch] shrink-0 text-right text-puntos font-black leading-none text-acento-vivo">
+                  {formatPoint(status.current, side)}
+                </div>
+              )}
             </div>
-
-            {status.current && (
-              <div className="tabular font-marcador min-w-[2ch] shrink-0 text-right text-puntos font-black leading-none text-acento-vivo">
-                {formatPoint(status.current, side)}
-              </div>
-            )}
           </button>
         ))}
       </div>

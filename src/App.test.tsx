@@ -37,7 +37,7 @@ const tab = (name: string) => screen.getByRole('button', { name })
 const half = (name: string) => screen.getByRole('button', { name: new RegExp(name) })
 
 async function agregarJugadoras(user: ReturnType<typeof userEvent.setup>, nombres: string[]) {
-  await user.click(tab('Jugadoras'))
+  await user.click(tab('Jugadores'))
   for (const nombre of nombres) {
     await user.type(screen.getByPlaceholderText('Nombre'), nombre)
     await user.click(screen.getByRole('button', { name: 'Agregar' }))

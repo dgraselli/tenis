@@ -66,11 +66,13 @@
   /* Los temas que no digan otra cosa heredan esta tipografía. */
   --tema-fuente: system-ui, 'Segoe UI', Roboto, sans-serif;
   --tema-fuente-marcador: system-ui, 'Segoe UI', Roboto, sans-serif;
-  /* Números para leer desde el fondo de la cancha: crecen con la pantalla
-     (vw) pero con techo para no desbordar en tablets. */
-  --tema-nombre: 1.25rem;
-  --tema-games: clamp(3.5rem, 18vw, 7rem);
-  --tema-puntos: clamp(5rem, 28vw, 10rem);
+  /* Números para leer desde el fondo de la cancha: crecen con el ancho (vw)
+     pero también limitados por el alto (vh), para que en apaisado las dos
+     mitades sigan entrando. En vertical van en su propia fila, así que pueden
+     ocupar buena parte del ancho. */
+  --tema-nombre: 1.5rem;
+  --tema-games: clamp(3.5rem, min(24vw, 18vh), 9rem);
+  --tema-puntos: clamp(4.5rem, min(36vw, 26vh), 13rem);
 }
 
 /* Claro: para pleno sol. */
@@ -128,8 +130,8 @@
   --tema-fuente: Verdana, 'DejaVu Sans', system-ui, sans-serif;
   --tema-fuente-marcador: 'Arial Black', 'DejaVu Sans', Verdana, sans-serif;
   --tema-nombre: 1.875rem;
-  --tema-games: clamp(4.5rem, 21vw, 8rem);
-  --tema-puntos: clamp(6rem, 32vw, 12rem);
+  --tema-games: clamp(3.5rem, min(28vw, 19vh), 10rem);
+  --tema-puntos: clamp(4.5rem, min(40vw, 27vh), 15rem);
 }
 
 /* Grand Slam: verde de tablero, dígitos amarillos de marcador. */
@@ -160,8 +162,8 @@
   --tema-fuente: 'Trebuchet MS', system-ui, sans-serif;
   --tema-fuente-marcador: 'Courier New', 'DejaVu Sans Mono', monospace;
   --tema-nombre: 1.5rem;
-  --tema-games: clamp(4rem, 20vw, 7.5rem);
-  --tema-puntos: clamp(5.5rem, 30vw, 11rem);
+  --tema-games: clamp(3.5rem, min(26vw, 18vh), 9.5rem);
+  --tema-puntos: clamp(4.5rem, min(38vw, 26vh), 14rem);
 }
 
 html,
