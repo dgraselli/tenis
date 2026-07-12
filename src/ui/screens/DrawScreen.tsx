@@ -27,7 +27,7 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
 
   const activas = players.filter((p) => p.active)
   if (activas.length < 2) {
-    return <Vacio>Cargá al menos dos jugadoras para poder sortear.</Vacio>
+    return <Vacio>Cargá al menos dos jugadores para poder sortear.</Vacio>
   }
 
   function jugar(match: DrawMatch) {
@@ -134,7 +134,7 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
           {session.lastDraw.resting.length > 0 && (
             <p className="mt-3 text-sm text-tinta-3">
               Descansa <strong>{session.lastDraw.resting.map((id) => playerName(players, id)).join(', ')}</strong>.
-              En la próxima ronda le toca a otra.
+              En la próxima ronda le toca a otro.
             </p>
           )}
         </section>

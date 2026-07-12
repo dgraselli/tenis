@@ -25,7 +25,7 @@ export function RankingScreen() {
         <table className="w-full text-sm">
           <thead className="text-xs uppercase text-tinta-4">
             <tr>
-              <th className="py-2 text-left font-medium">Jugadora</th>
+              <th className="py-2 text-left font-medium">Jugador</th>
               <th className="py-2 text-right font-medium">PJ</th>
               <th className="py-2 text-right font-medium">Gan</th>
               <th className="py-2 text-right font-medium">%</th>

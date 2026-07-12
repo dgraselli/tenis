@@ -71,7 +71,7 @@ export function NewMatchScreen() {
   if (players.length < 2) {
     return (
       <Vacio>
-        Cargá al menos dos jugadoras en la pestaña <strong>Jugadoras</strong> para poder empezar un
+        Cargá al menos dos jugadores en la pestaña <strong>Jugadores</strong> para poder empezar un
         partido.
       </Vacio>
     )
@@ -137,7 +137,7 @@ export function NewMatchScreen() {
       </section>
 
       <section>
-        <Titulo>Jugadoras</Titulo>
+        <Titulo>Jugadores</Titulo>
         <div className="flex flex-wrap gap-2">
           {players.map((p) => {
             const elegida = sideA.includes(p.id) || sideB.includes(p.id)

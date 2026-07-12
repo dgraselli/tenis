@@ -16,7 +16,7 @@ const TITLES: Record<View, string> = {
   sorteo: 'Sorteo del día',
   ranking: 'Ranking',
   historial: 'Historial',
-  jugadoras: 'Jugadoras',
+  jugadoras: 'Jugadores',
   ajustes: 'Ajustes',
 }
 
