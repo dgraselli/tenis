@@ -42,6 +42,20 @@ describe('currentServer en games comunes', () => {
   })
 })
 
+describe('currentServer entre sets', () => {
+  it('la rotación sigue de un set al otro', () => {
+    const best3 = { ...rulesForGames(4), setsToWin: 2 }
+    // Primer set 4-0: 4 games jugados (par), vuelve a sacar la primera.
+    let status = replay(Array<Side>(16).fill('A'), best3)
+    expect(status.finished).toBe(false)
+    expect(currentServer(status, 'A')).toBe('A')
+
+    // Un game más en el segundo set: 5 en total, saca la otra.
+    status = replay(Array<Side>(20).fill('A'), best3)
+    expect(currentServer(status, 'A')).toBe('B')
+  })
+})
+
 describe('currentServer en el tie-break', () => {
   /** 6-6 con `extra` puntos alternados dentro del tie-break. */
   function tiebreakAfter(extra: number): MatchStatus {

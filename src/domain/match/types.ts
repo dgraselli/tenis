@@ -1,5 +1,5 @@
 import type { LiveMatch } from '../scoring/liveMatch'
-import type { MatchRules, Side } from '../scoring/types'
+import type { MatchRules, SetResult, Side } from '../scoring/types'
 import type { PlayerId } from '../players/types'
 import { elapsedSeconds } from '../../lib/duration'
 
@@ -11,8 +11,8 @@ export interface MatchSide {
 }
 
 export interface MatchResult {
-  games: Record<Side, number>
-  tiebreak?: Record<Side, number>
+  /** Un solo elemento en el formato clásico de un set. */
+  sets: SetResult[]
   winner: Side
 }
 
@@ -69,8 +69,7 @@ export function finishMatch(active: ActiveMatch, playedAt = new Date().toISOStri
     rules: active.live.rules,
     sides: active.sides,
     result: {
-      games: status.games,
-      ...(status.tiebreak ? { tiebreak: status.tiebreak } : {}),
+      sets: status.sets,
       winner: status.winner,
     },
     playedAt,

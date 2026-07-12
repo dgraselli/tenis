@@ -23,18 +23,29 @@ export interface TiebreakScore {
 
 export type CurrentGame = GameScore | TiebreakScore
 
+/** Un set cerrado: sus games y, si se definió en tie-break, ese marcador. */
+export interface SetResult {
+  games: Record<Side, number>
+  tiebreak?: Record<Side, number>
+}
+
 export interface MatchStatus {
+  /** Sets ya cerrados. Al terminar el partido incluye también al último. */
+  sets: SetResult[]
+  /** Games del set en curso; al terminar, los del set que cerró el partido. */
   games: Record<Side, number>
   /** null solo cuando el partido terminó. */
   current: CurrentGame | null
   winner: Side | null
   finished: boolean
-  /** Marcador final del tie-break, si lo hubo. Se conserva al cerrar el partido. */
+  /** Tie-break del set que cerró el partido, si lo hubo. */
   tiebreak?: Record<Side, number>
 }
 
 export interface MatchRules {
-  /** Games para ganar el set. 6 normal, 4 corto, 8 pro-set. */
+  /** Sets para ganar el partido. 1 = un set, 2 = al mejor de 3, 3 = al mejor de 5. */
+  setsToWin: number
+  /** Games para ganar cada set. 6 normal, 4 corto, 8 pro-set. */
   gamesToWinSet: number
   /** Diferencia mínima de games para cerrar el set. */
   gamesMargin: number
@@ -45,6 +56,7 @@ export interface MatchRules {
 }
 
 export const DEFAULT_RULES: MatchRules = {
+  setsToWin: 1,
   gamesToWinSet: 6,
   gamesMargin: 2,
   tiebreakAt: 6,
@@ -74,6 +86,9 @@ export const PRESETS: RulePreset[] = [
  */
 export function validateRules(r: MatchRules): string[] {
   const errors: string[] = []
+  if (!Number.isInteger(r.setsToWin) || r.setsToWin < 1) {
+    errors.push('El partido tiene que ser de al menos 1 set.')
+  }
   if (!Number.isInteger(r.gamesToWinSet) || r.gamesToWinSet < 1) {
     errors.push('El set tiene que ser de al menos 1 game.')
   }

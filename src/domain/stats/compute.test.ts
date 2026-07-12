@@ -20,7 +20,7 @@ function match(a: string[], b: string[], gamesA: number, gamesB: number): Stored
       A: { players: a as [string] | [string, string] },
       B: { players: b as [string] | [string, string] },
     },
-    result: { games: { A: gamesA, B: gamesB }, winner: gamesA > gamesB ? 'A' : 'B' },
+    result: { sets: [{ games: { A: gamesA, B: gamesB } }], winner: gamesA > gamesB ? 'A' : 'B' },
     playedAt: '2026-01-01T00:00:00.000Z',
   }
 }

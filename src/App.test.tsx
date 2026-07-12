@@ -95,6 +95,37 @@ describe('la app de punta a punta', () => {
     expect(within(filaAna).getByText('59')).toBeInTheDocument()
   })
 
+  it('al mejor de 3 sets: muestra los sets ganados y el resultado por set', async () => {
+    const user = userEvent.setup()
+    renderApp()
+    await agregarJugadoras(user, ['Ana', 'Bea'])
+    await user.click(tab('Partido'))
+    await user.click(screen.getByRole('button', { name: 'Singles' }))
+    await user.click(screen.getByRole('button', { name: 'Set corto (4 games)' }))
+    await user.click(screen.getByRole('button', { name: 'Mejor de 3 sets' }))
+    await user.click(screen.getByRole('button', { name: 'Ana' }))
+    await user.click(screen.getByRole('button', { name: 'Bea' }))
+    await user.click(screen.getByRole('button', { name: 'Empezar partido' }))
+
+    expect(screen.getByText('Al mejor de 3 sets a 4 games')).toBeInTheDocument()
+    // Con más de un set aparece la columna de sets en los dos lados.
+    expect(screen.getAllByText('sets')).toHaveLength(2)
+
+    // Primer set 4-0: el partido sigue, con el set anotado.
+    for (let i = 0; i < 16; i++) await user.click(half('Ana'))
+    expect(screen.queryByText(/Ganó/)).not.toBeInTheDocument()
+
+    // Segundo set 4-0: ahora sí termina.
+    for (let i = 0; i < 16; i++) await user.click(half('Ana'))
+    expect(screen.getByText(/Ganó/)).toBeInTheDocument()
+    expect(screen.getByText('4-0 4-0')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+    await user.click(tab('Historial'))
+    expect(screen.getByText('4-0 4-0')).toBeInTheDocument()
+    expect(screen.getByText('Al mejor de 3 sets a 4 games')).toBeInTheDocument()
+  })
+
   it('muestra quién saca y el saque alterna con cada game', async () => {
     const user = userEvent.setup()
     renderApp()

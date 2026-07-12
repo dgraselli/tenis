@@ -216,6 +216,88 @@ describe('reglas configurables', () => {
   })
 })
 
+describe('al mejor de varios sets', () => {
+  const best3 = { ...RULES, setsToWin: 2 }
+
+  it('ganar un set no cierra el partido: arranca el siguiente en 0-0', () => {
+    const s = winGames(newMatch(), 'A', 6, best3)
+    expect(s.finished).toBe(false)
+    expect(s.sets).toEqual([{ games: { A: 6, B: 0 } }])
+    expect(s.games).toEqual({ A: 0, B: 0 })
+    expect(s.current).toMatchObject({ phase: 'game', points: { A: 0, B: 0 } })
+  })
+
+  it('dos sets seguidos cierran el partido', () => {
+    const s = winGames(newMatch(), 'A', 12, best3)
+    expect(s.finished).toBe(true)
+    expect(s.winner).toBe('A')
+    expect(s.sets).toHaveLength(2)
+    expect(formatFinalScore(s)).toBe('6-0 6-0')
+  })
+
+  it('1-1 en sets se define en el tercero', () => {
+    let s = winGames(newMatch(), 'A', 6, best3)
+    s = winGames(s, 'B', 6, best3)
+    expect(s.finished).toBe(false)
+
+    s = winGames(s, 'A', 6, best3)
+    expect(s.finished).toBe(true)
+    expect(s.winner).toBe('A')
+    expect(formatFinalScore(s)).toBe('6-0 0-6 6-0')
+  })
+
+  it('un tie-break intermedio queda registrado en su set', () => {
+    const s = play('AAAAAAA', best3, atGames(6, 6, best3))
+    expect(s.finished).toBe(false)
+    expect(s.sets).toEqual([{ games: { A: 7, B: 6 }, tiebreak: { A: 7, B: 0 } }])
+    // El tie-break "del partido" es solo el que lo cierra.
+    expect(s.tiebreak).toBeUndefined()
+  })
+
+  it('al mejor de 5 hacen falta 3 sets', () => {
+    const best5 = { ...rulesForGames(4), setsToWin: 3 }
+    expect(winGames(newMatch(), 'A', 8, best5).finished).toBe(false)
+
+    const s = winGames(newMatch(), 'A', 12, best5)
+    expect(s.finished).toBe(true)
+    expect(formatFinalScore(s)).toBe('4-0 4-0 4-0')
+  })
+
+  it('deshacer cruza el límite del set', () => {
+    const r = { ...rulesForGames(4), setsToWin: 2 }
+    let m = startLiveMatch(r)
+    for (const s of 'A'.repeat(16)) m = applyPoint(m, s as Side)
+    expect(m.status.sets).toHaveLength(1)
+
+    m = undo(m)
+    expect(m.status.sets).toHaveLength(0)
+    expect(m.status.games).toEqual({ A: 3, B: 0 })
+    expect(formatPoint(m.status.current!, 'A')).toBe('40')
+  })
+
+  it('cualquier partido al mejor de 3 termina con sets legales', () => {
+    const rules = { ...rulesForGames(4), setsToWin: 2 }
+    for (let seed = 1; seed <= 100; seed++) {
+      const rng = seeded(seed)
+      let status = newMatch()
+      let puntos = 0
+      while (!status.finished) {
+        status = pointTo(status, rng() < 0.5 ? 'A' : 'B', rules)
+        if (++puntos > 10_000) throw new Error('el partido no termina nunca')
+      }
+
+      const w = status.winner!
+      const l = otherSide(w)
+      const ganados = status.sets.filter((set) => set.games[w] > set.games[l]).length
+      expect(ganados).toBe(2)
+      expect(status.sets.length - ganados).toBeLessThan(2)
+      for (const set of status.sets) {
+        expect(set.games.A).not.toBe(set.games.B)
+      }
+    }
+  })
+})
+
 describe('validateRules', () => {
   it('acepta los presets', () => {
     for (const g of [4, 6, 8]) expect(validateRules(rulesForGames(g))).toEqual([])

@@ -178,7 +178,7 @@ describe('estrategia sin-repetir', () => {
       format: 'doubles',
       rules: DEFAULT_RULES,
       sides: { A: { players: [a, b] }, B: { players: vs } },
-      result: { games: { A: 6, B: 4 }, winner: 'A' },
+      result: { sets: [{ games: { A: 6, B: 4 } }], winner: 'A' },
       playedAt: `2026-01-0${1 + seq}T00:00:00.000Z`,
     }
   }
@@ -253,7 +253,7 @@ describe('buildPairHistory', () => {
       format: 'doubles',
       rules: DEFAULT_RULES,
       sides: { A: { players: [a, b] }, B: { players: ['x', 'y'] } },
-      result: { games: { A: 6, B: 0 }, winner: 'A' },
+      result: { sets: [{ games: { A: 6, B: 0 } }], winner: 'A' },
       playedAt: at,
     })
 

@@ -81,6 +81,40 @@ describe('createLocalStorageRepo', () => {
     expect(db.activeMatch).toMatchObject({ id: 'm1', firstServer: 'A' })
   })
 
+  it('migra los resultados de v3 al formato por sets, con setsToWin en las reglas', () => {
+    const rulesViejas = { gamesToWinSet: 6, gamesMargin: 2, tiebreakAt: 6, tiebreakTo: 7, tiebreakMargin: 2 }
+    storage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 3,
+        players: [],
+        matches: [
+          {
+            id: 'm1',
+            rules: rulesViejas,
+            result: { games: { A: 7, B: 6 }, tiebreak: { A: 7, B: 5 }, winner: 'A' },
+          },
+        ],
+        activeMatch: {
+          id: 'm2',
+          firstServer: 'A',
+          live: { rules: rulesViejas, status: { games: { A: 1, B: 0 } }, pointLog: [] },
+        },
+        settings: { lastRules: { singles: rulesViejas, doubles: rulesViejas } },
+      }),
+    )
+
+    const db = createLocalStorageRepo(storage).load()
+    expect(db.matches[0].rules.setsToWin).toBe(1)
+    expect(db.matches[0].result).toEqual({
+      sets: [{ games: { A: 7, B: 6 }, tiebreak: { A: 7, B: 5 } }],
+      winner: 'A',
+    })
+    expect(db.activeMatch!.live.rules.setsToWin).toBe(1)
+    expect(db.activeMatch!.live.status.sets).toEqual([])
+    expect(db.settings.lastRules.singles.setsToWin).toBe(1)
+  })
+
   it('con datos de una versión más nueva no los pisa: los archiva', () => {
     const futuro = JSON.stringify({ schemaVersion: 99, players: [{ id: 'p1' }] })
     storage.setItem(STORAGE_KEY, futuro)

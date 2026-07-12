@@ -4,6 +4,7 @@ import { useMatch } from '../../app/useMatch'
 import { usePlayers } from '../../app/usePlayers'
 import { useRemoteControl } from '../../app/useRemoteControl'
 import { formatClock } from '../../lib/duration'
+import { setsWon } from '../../domain/scoring/engine'
 import { canUndo } from '../../domain/scoring/liveMatch'
 import { describeGame, describeRules, formatFinalScore, formatPoint } from '../../domain/scoring/format'
 import { currentServer } from '../../domain/scoring/serve'
@@ -70,15 +71,25 @@ export function ScoreScreen() {
               'enabled:active:bg-acento-fondo',
             ].join(' ')}
           >
-            <div className="min-w-0 flex-1 text-left">
+            <div className="flex min-w-0 flex-1 items-center gap-2 text-left">
               <div className="truncate text-nombre font-semibold text-tinta">{nameOf(side)}</div>
               {saca === side && (
-                <div className="mt-1 flex items-center gap-1.5 text-lg font-bold text-aviso-vivo">
-                  <span aria-hidden>🎾</span>
-                  Saca
-                </div>
+                <span className="shrink-0" title="Saca">
+                  {/* El círculo es la pelotita: quien lo tiene al lado, saca. */}
+                  <span aria-hidden className="block size-5 rounded-full bg-aviso-vivo" />
+                  <span className="sr-only">Saca</span>
+                </span>
               )}
             </div>
+
+            {rules.setsToWin > 1 && (
+              <div className="shrink-0 text-center">
+                <div className="tabular font-marcador text-4xl font-bold leading-none text-tinta-4">
+                  {setsWon(status.sets, side)}
+                </div>
+                <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">sets</div>
+              </div>
+            )}
 
             <div className="shrink-0 text-center">
               <div className="tabular font-marcador text-games font-bold leading-none text-tinta-2">

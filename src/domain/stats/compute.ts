@@ -1,13 +1,19 @@
-import type { StoredMatch } from '../match/types'
+import type { MatchResult, StoredMatch } from '../match/types'
 import { sideOfPlayer } from '../match/types'
 import type { Player, PlayerId } from '../players/types'
 import { otherSide } from '../scoring/engine'
+import type { Side } from '../scoring/types'
 import { ratingFor } from './rating'
 import { pairFromKey, pairKey } from './types'
 import type { PairStats, PlayerStats } from './types'
 
 /** Partidos mínimos juntas para entrar al ranking de duplas. */
 export const MIN_PAIR_MATCHES = 3
+
+/** Games totales de un lado, sumando todos los sets del partido. */
+function gamesOf(result: MatchResult, side: Side): number {
+  return result.sets.reduce((total, set) => total + set.games[side], 0)
+}
 
 function emptyStats(playerId: PlayerId): PlayerStats {
   return {
@@ -41,8 +47,8 @@ export function computePlayerStats(matches: StoredMatch[], players: Player[]): P
         s.played += 1
         if (match.result.winner === side) s.won += 1
         else s.lost += 1
-        s.gamesFor += match.result.games[side]
-        s.gamesAgainst += match.result.games[otherSide(side)]
+        s.gamesFor += gamesOf(match.result, side)
+        s.gamesAgainst += gamesOf(match.result, otherSide(side))
       }
     }
   }
@@ -87,7 +93,7 @@ export function computePairStats(matches: StoredMatch[]): PairStats[] {
       s.played += 1
       if (match.result.winner === side) s.won += 1
       else s.lost += 1
-      s.gamesDiff += match.result.games[side] - match.result.games[otherSide(side)]
+      s.gamesDiff += gamesOf(match.result, side) - gamesOf(match.result, otherSide(side))
     }
   }
 
