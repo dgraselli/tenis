@@ -70,7 +70,7 @@
      pero también limitados por el alto (vh), para que en apaisado las dos
      mitades sigan entrando. En vertical van en su propia fila, así que pueden
      ocupar buena parte del ancho. */
-  --tema-nombre: 1.5rem;
+  --tema-nombre: 2rem;
   --tema-games: clamp(3.5rem, min(24vw, 18vh), 9rem);
   --tema-puntos: clamp(4.5rem, min(36vw, 26vh), 13rem);
 }
@@ -129,7 +129,7 @@
   /* De lejos: letra ancha y números enormes. */
   --tema-fuente: Verdana, 'DejaVu Sans', system-ui, sans-serif;
   --tema-fuente-marcador: 'Arial Black', 'DejaVu Sans', Verdana, sans-serif;
-  --tema-nombre: 1.875rem;
+  --tema-nombre: 2.375rem;
   --tema-games: clamp(3.5rem, min(28vw, 19vh), 10rem);
   --tema-puntos: clamp(4.5rem, min(40vw, 27vh), 15rem);
 }
@@ -161,7 +161,7 @@
 
   --tema-fuente: 'Trebuchet MS', system-ui, sans-serif;
   --tema-fuente-marcador: 'Courier New', 'DejaVu Sans Mono', monospace;
-  --tema-nombre: 1.5rem;
+  --tema-nombre: 2rem;
   --tema-games: clamp(3.5rem, min(26vw, 18vh), 9.5rem);
   --tema-puntos: clamp(4.5rem, min(38vw, 26vh), 14rem);
 }
