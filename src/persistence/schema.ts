@@ -8,7 +8,7 @@ import { DEFAULT_RULES } from '../domain/scoring/types'
 import { DEFAULT_THEME } from '../domain/theme/types'
 
 export const STORAGE_KEY = 'tenis.db'
-export const SCHEMA_VERSION = 4
+export const SCHEMA_VERSION = 5
 
 export interface Settings {
   /** Último formato usado por modalidad: default al empezar un partido. */

@@ -70,6 +70,12 @@ export const MIGRATIONS: Record<number, Migration> = {
 
     return { ...raw, matches, activeMatch, settings: { ...settings, lastRules } }
   },
+  // v5 elimina el tema canchero: quien lo tenía pasa al nuevo default, slam.
+  4: (raw) => {
+    const settings = isRecord(raw.settings) ? raw.settings : {}
+    if (settings.theme !== 'canchero') return raw
+    return { ...raw, settings: { ...settings, theme: 'slam' } }
+  },
 }
 
 /**
