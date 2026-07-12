@@ -115,6 +115,21 @@ describe('createLocalStorageRepo', () => {
     expect(db.settings.lastRules.singles.setsToWin).toBe(1)
   })
 
+  it('migra el tema canchero, que ya no existe, al nuevo default', () => {
+    storage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ schemaVersion: 4, players: [], matches: [], settings: { theme: 'canchero' } }),
+    )
+    expect(createLocalStorageRepo(storage).load().settings.theme).toBe('slam')
+
+    // Un tema elegido a propósito no se toca.
+    storage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ schemaVersion: 4, players: [], matches: [], settings: { theme: 'claro' } }),
+    )
+    expect(createLocalStorageRepo(storage).load().settings.theme).toBe('claro')
+  })
+
   it('con datos de una versión más nueva no los pisa: los archiva', () => {
     const futuro = JSON.stringify({ schemaVersion: 99, players: [{ id: 'p1' }] })
     storage.setItem(STORAGE_KEY, futuro)

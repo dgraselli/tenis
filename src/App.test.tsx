@@ -280,7 +280,7 @@ describe('la app de punta a punta', () => {
     const user = userEvent.setup()
     const { container, unmount } = renderApp()
 
-    expect(container.firstChild).toHaveAttribute('data-theme', 'oscuro')
+    expect(container.firstChild).toHaveAttribute('data-theme', 'slam')
 
     await user.click(screen.getByRole('button', { name: 'Ajustes' }))
     await user.click(screen.getByRole('button', { name: /Alto contraste/ }))

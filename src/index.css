@@ -99,36 +99,6 @@
   --tema-peligro-tinta: #881337;
 }
 
-/* Canchero: polvo de ladrillo y atardecer, con rosa que pega fuerte. */
-[data-theme='canchero'] {
-  --tema-fondo: #fff7ed;
-  --tema-panel: #ffedd5;
-  --tema-tarjeta: #fed7aa;
-  --tema-chip: #fdba74;
-  --tema-chip-activo: #fb923c;
-  --tema-borde: #fed7aa;
-  --tema-borde-2: #fdba74;
-  --tema-tinta: #431407;
-  --tema-tinta-2: #7c2d12;
-  --tema-tinta-3: #9a3412;
-  --tema-tinta-4: #c2410c;
-  --tema-tinta-5: #ea580c;
-  --tema-acento: #db2777;
-  --tema-acento-tinta: #fdf2f8;
-  --tema-acento-vivo: #be185d;
-  --tema-acento-fondo: #fbcfe8;
-  --tema-aviso: #8b5cf6;
-  --tema-aviso-tinta: #ffffff;
-  --tema-aviso-vivo: #6d28d9;
-  --tema-peligro: #dc2626;
-  --tema-peligro-fondo: #fee2e2;
-  --tema-peligro-tinta: #7f1d1d;
-
-  --tema-fuente: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', cursive;
-  --tema-fuente-marcador: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', cursive;
-  --tema-puntos: clamp(5rem, 30vw, 11rem);
-}
-
 /* Alto contraste: negro y amarillo bien fuertes, se lee desde el fondo de la cancha. */
 [data-theme='contraste'] {
   --tema-fondo: #000000;
