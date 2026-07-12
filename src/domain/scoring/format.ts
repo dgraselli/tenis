@@ -1,4 +1,4 @@
-import type { CurrentGame, MatchRules, Side } from './types'
+import type { CurrentGame, MatchRules, SetResult, Side } from './types'
 
 const POINT_LABELS = ['0', '15', '30', '40'] as const
 
@@ -21,25 +21,26 @@ export function describeGame(current: CurrentGame | null, nameOf: (s: Side) => s
   return ''
 }
 
-/**
- * "6-4", o "7-6 (7-5)" si hubo tie-break. Acepta tanto el estado vivo como el
- * resultado guardado: a los dos les alcanza con tener games y tie-break.
- */
-export interface Scoreline {
-  games: Record<Side, number>
-  tiebreak?: Record<Side, number>
-}
-
-export function formatFinalScore(score: Scoreline, from: Side = 'A'): string {
+/** "6-4", o "7-6 (7-5)" si el set se definió en tie-break. */
+export function formatSet(set: SetResult, from: Side = 'A'): string {
   const to: Side = from === 'A' ? 'B' : 'A'
-  const games = `${score.games[from]}-${score.games[to]}`
-  if (!score.tiebreak) return games
-  return `${games} (${score.tiebreak[from]}-${score.tiebreak[to]})`
+  const games = `${set.games[from]}-${set.games[to]}`
+  if (!set.tiebreak) return games
+  return `${games} (${set.tiebreak[from]}-${set.tiebreak[to]})`
 }
 
-/** "Set a 6 games", "Set a 4 games, sin tie-break". */
+/**
+ * "6-4", o "6-4 3-6 7-5" si fue a más de un set. Acepta tanto el estado vivo
+ * como el resultado guardado: a los dos les alcanza con tener los sets.
+ */
+export function formatFinalScore(score: { sets: SetResult[] }, from: Side = 'A'): string {
+  return score.sets.map((set) => formatSet(set, from)).join(' ')
+}
+
+/** "Set a 6 games", "Al mejor de 3 sets a 6 games, sin tie-break"... */
 export function describeRules(rules: MatchRules): string {
-  const base = `Set a ${rules.gamesToWinSet} games`
+  const sets = rules.setsToWin > 1 ? `Al mejor de ${rules.setsToWin * 2 - 1} sets a` : 'Set a'
+  const base = `${sets} ${rules.gamesToWinSet} games`
   if (rules.tiebreakAt === null) return `${base}, sin tie-break`
   if (rules.tiebreakAt === rules.gamesToWinSet) return base
   return `${base}, tie-break en ${rules.tiebreakAt}-${rules.tiebreakAt}`

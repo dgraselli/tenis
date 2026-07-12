@@ -3,6 +3,12 @@ import { PRESETS, rulesForGames, validateRules } from '../../domain/scoring/type
 import type { MatchRules } from '../../domain/scoring/types'
 import { Opcion } from './Vacio'
 
+const SETS = [
+  { setsToWin: 1, label: '1 set' },
+  { setsToWin: 2, label: 'Mejor de 3 sets' },
+  { setsToWin: 3, label: 'Mejor de 5 sets' },
+]
+
 /** Presets, largo de set a medida y tie-break. Lo usan el sorteo y el partido manual. */
 export function FormatoPicker({
   rules,
@@ -20,9 +26,22 @@ export function FormatoPicker({
           <Opcion
             key={preset.label}
             activa={rules.gamesToWinSet === preset.rules.gamesToWinSet}
-            onClick={() => onChange(preset.rules)}
+            // El preset define el set; cuántos sets se juegan se elige aparte.
+            onClick={() => onChange({ ...preset.rules, setsToWin: rules.setsToWin })}
           >
             {preset.label}
+          </Opcion>
+        ))}
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {SETS.map(({ setsToWin, label }) => (
+          <Opcion
+            key={setsToWin}
+            activa={rules.setsToWin === setsToWin}
+            onClick={() => onChange({ ...rules, setsToWin })}
+          >
+            {label}
           </Opcion>
         ))}
       </div>
@@ -35,7 +54,9 @@ export function FormatoPicker({
           min={1}
           max={20}
           value={rules.gamesToWinSet}
-          onChange={(e) => onChange(rulesForGames(Number(e.target.value)))}
+          onChange={(e) =>
+            onChange({ ...rulesForGames(Number(e.target.value)), setsToWin: rules.setsToWin })
+          }
           className="tabular w-20 rounded-lg bg-tarjeta px-3 py-2 text-center text-tinta"
         />
         games

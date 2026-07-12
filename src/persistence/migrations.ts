@@ -22,6 +22,54 @@ export const MIGRATIONS: Record<number, Migration> = {
       settings: { ...settings, lastRules: { singles: old, doubles: old } },
     }
   },
+  // v3 agrega quién saca primero al partido en curso. Para uno que venía de
+  // antes no se sabe: se asume el lado A, que era el default visual.
+  2: (raw) => {
+    if (!isRecord(raw.activeMatch)) return raw
+    return { ...raw, activeMatch: { firstServer: 'A', ...raw.activeMatch } }
+  },
+  // v4 pasa a partidos por sets: las reglas ganan setsToWin (1 = lo que ya
+  // era), los resultados guardan sets en vez de un solo marcador, y el estado
+  // en vivo lleva la lista de sets cerrados.
+  3: (raw) => {
+    const conSets = (rules: unknown) =>
+      isRecord(rules) ? { setsToWin: 1, ...rules } : rules
+
+    const resultado = (result: unknown) => {
+      if (!isRecord(result)) return result
+      const { games, tiebreak, winner } = result
+      return { sets: [{ games, ...(tiebreak !== undefined ? { tiebreak } : {}) }], winner }
+    }
+
+    const matches = Array.isArray(raw.matches)
+      ? raw.matches.map((m) =>
+          isRecord(m) ? { ...m, rules: conSets(m.rules), result: resultado(m.result) } : m,
+        )
+      : raw.matches
+
+    let activeMatch = raw.activeMatch
+    if (isRecord(activeMatch) && isRecord(activeMatch.live)) {
+      const live = activeMatch.live
+      activeMatch = {
+        ...activeMatch,
+        live: {
+          ...live,
+          rules: conSets(live.rules),
+          ...(isRecord(live.status) ? { status: { sets: [], ...live.status } } : {}),
+        },
+      }
+    }
+
+    const settings = isRecord(raw.settings) ? raw.settings : {}
+    const lastRules = isRecord(settings.lastRules)
+      ? {
+          singles: conSets(settings.lastRules.singles),
+          doubles: conSets(settings.lastRules.doubles),
+        }
+      : settings.lastRules
+
+    return { ...raw, matches, activeMatch, settings: { ...settings, lastRules } }
+  },
 }
 
 /**

@@ -66,9 +66,11 @@
   /* Los temas que no digan otra cosa heredan esta tipografía. */
   --tema-fuente: system-ui, 'Segoe UI', Roboto, sans-serif;
   --tema-fuente-marcador: system-ui, 'Segoe UI', Roboto, sans-serif;
+  /* Números para leer desde el fondo de la cancha: crecen con la pantalla
+     (vw) pero con techo para no desbordar en tablets. */
   --tema-nombre: 1.25rem;
-  --tema-games: 3rem;
-  --tema-puntos: 4.5rem;
+  --tema-games: clamp(3.5rem, 18vw, 7rem);
+  --tema-puntos: clamp(5rem, 28vw, 10rem);
 }
 
 /* Claro: para pleno sol. */
@@ -124,7 +126,7 @@
 
   --tema-fuente: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', cursive;
   --tema-fuente-marcador: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', cursive;
-  --tema-puntos: 5rem;
+  --tema-puntos: clamp(5rem, 30vw, 11rem);
 }
 
 /* Alto contraste: negro y amarillo bien fuertes, se lee desde el fondo de la cancha. */
@@ -156,8 +158,8 @@
   --tema-fuente: Verdana, 'DejaVu Sans', system-ui, sans-serif;
   --tema-fuente-marcador: 'Arial Black', 'DejaVu Sans', Verdana, sans-serif;
   --tema-nombre: 1.875rem;
-  --tema-games: 4.5rem;
-  --tema-puntos: 8rem;
+  --tema-games: clamp(4.5rem, 21vw, 8rem);
+  --tema-puntos: clamp(6rem, 32vw, 12rem);
 }
 
 /* Grand Slam: verde de tablero, dígitos amarillos de marcador. */
@@ -188,8 +190,8 @@
   --tema-fuente: 'Trebuchet MS', system-ui, sans-serif;
   --tema-fuente-marcador: 'Courier New', 'DejaVu Sans Mono', monospace;
   --tema-nombre: 1.5rem;
-  --tema-games: 3.5rem;
-  --tema-puntos: 6.5rem;
+  --tema-games: clamp(4rem, 20vw, 7.5rem);
+  --tema-puntos: clamp(5.5rem, 30vw, 11rem);
 }
 
 html,

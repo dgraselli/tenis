@@ -3,6 +3,7 @@ import type {
   GameScore,
   MatchRules,
   MatchStatus,
+  SetResult,
   Side,
   TiebreakScore,
 } from './types'
@@ -13,11 +14,17 @@ export function otherSide(side: Side): Side {
 
 export function newMatch(): MatchStatus {
   return {
+    sets: [],
     games: { A: 0, B: 0 },
     current: { phase: 'game', points: { A: 0, B: 0 }, advantage: null },
     winner: null,
     finished: false,
   }
+}
+
+/** Sets ganados por `side`: en cada set cerrado, quien ganó tiene más games. */
+export function setsWon(sets: SetResult[], side: Side): number {
+  return sets.filter((s) => s.games[side] > s.games[otherSide(side)]).length
 }
 
 /**
@@ -81,16 +88,38 @@ function applyTiebreakPoint(
   // Gana con >= tiebreakTo y diferencia >= tiebreakMargin.
   // Cubre 7-0..7-5 y las prolongaciones 8-6, 9-7, 12-10...
   if (points[side] >= rules.tiebreakTo && points[side] - points[loser] >= rules.tiebreakMargin) {
-    return {
-      games: { ...status.games, [side]: status.games[side] + 1 },
-      current: null,
-      winner: side,
-      finished: true,
-      tiebreak: points,
-    }
+    const games = { ...status.games, [side]: status.games[side] + 1 }
+    return closeSet(status, { games, tiebreak: points }, side, rules)
   }
 
   return { ...status, current: { phase: 'tiebreak', points } }
+}
+
+/**
+ * Cierra un set y decide si con él se cierra el partido o arranca otro set.
+ * Con setsToWin = 1 (el formato clásico del grupo) el primer set es el partido.
+ */
+function closeSet(status: MatchStatus, set: SetResult, side: Side, rules: MatchRules): MatchStatus {
+  const sets = [...status.sets, set]
+
+  if (setsWon(sets, side) >= rules.setsToWin) {
+    return {
+      sets,
+      games: set.games,
+      current: null,
+      winner: side,
+      finished: true,
+      ...(set.tiebreak ? { tiebreak: set.tiebreak } : {}),
+    }
+  }
+
+  return {
+    sets,
+    games: { A: 0, B: 0 },
+    current: { phase: 'game', points: { A: 0, B: 0 }, advantage: null },
+    winner: null,
+    finished: false,
+  }
 }
 
 /**
@@ -106,24 +135,22 @@ function winGame(status: MatchStatus, side: Side, rules: MatchRules): MatchStatu
   // Set ganado: llegó al largo del set con la diferencia mínima.
   // Con el default cubre 6-0..6-4 y también 7-5.
   if (won >= rules.gamesToWinSet && won - lost >= rules.gamesMargin) {
-    return { games, current: null, winner: side, finished: true }
+    return closeSet(status, { games }, side, rules)
   }
 
   // Empate en el umbral del tie-break.
   if (rules.tiebreakAt !== null && won === rules.tiebreakAt && lost === rules.tiebreakAt) {
     return {
+      ...status,
       games,
       current: { phase: 'tiebreak', points: { A: 0, B: 0 } },
-      winner: null,
-      finished: false,
     }
   }
 
   // 6-5 no cierra (diferencia 1): el set sigue con otro game.
   return {
+    ...status,
     games,
     current: { phase: 'game', points: { A: 0, B: 0 }, advantage: null },
-    winner: null,
-    finished: false,
   }
 }

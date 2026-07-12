@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { StoreProvider } from './app/store'
 import { createLocalStorageRepo } from './persistence/localStorageRepo'
@@ -93,6 +93,86 @@ describe('la app de punta a punta', () => {
     // Ganar el primer partido deja el nivel en 59 (58,3 más el ajuste por
     // diferencia de games), no en 100.
     expect(within(filaAna).getByText('59')).toBeInTheDocument()
+  })
+
+  it('al mejor de 3 sets: muestra los sets ganados y el resultado por set', async () => {
+    const user = userEvent.setup()
+    renderApp()
+    await agregarJugadoras(user, ['Ana', 'Bea'])
+    await user.click(tab('Partido'))
+    await user.click(screen.getByRole('button', { name: 'Singles' }))
+    await user.click(screen.getByRole('button', { name: 'Set corto (4 games)' }))
+    await user.click(screen.getByRole('button', { name: 'Mejor de 3 sets' }))
+    await user.click(screen.getByRole('button', { name: 'Ana' }))
+    await user.click(screen.getByRole('button', { name: 'Bea' }))
+    await user.click(screen.getByRole('button', { name: 'Empezar partido' }))
+
+    expect(screen.getByText('Al mejor de 3 sets a 4 games')).toBeInTheDocument()
+    // Con más de un set aparece la columna de sets en los dos lados.
+    expect(screen.getAllByText('sets')).toHaveLength(2)
+
+    // Primer set 4-0: el partido sigue, con el set anotado.
+    for (let i = 0; i < 16; i++) await user.click(half('Ana'))
+    expect(screen.queryByText(/Ganó/)).not.toBeInTheDocument()
+
+    // Segundo set 4-0: ahora sí termina.
+    for (let i = 0; i < 16; i++) await user.click(half('Ana'))
+    expect(screen.getByText(/Ganó/)).toBeInTheDocument()
+    expect(screen.getByText('4-0 4-0')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+    await user.click(tab('Historial'))
+    expect(screen.getByText('4-0 4-0')).toBeInTheDocument()
+    expect(screen.getByText('Al mejor de 3 sets a 4 games')).toBeInTheDocument()
+  })
+
+  it('muestra quién saca y el saque alterna con cada game', async () => {
+    const user = userEvent.setup()
+    renderApp()
+    await empezarSingles(user)
+
+    // Por defecto saca el lado A: Ana.
+    expect(half('Ana')).toHaveTextContent('Saca')
+    expect(half('Bea')).not.toHaveTextContent('Saca')
+
+    // Un game completo pasa el saque al otro lado.
+    for (let i = 0; i < 4; i++) await user.click(half('Ana'))
+    expect(half('Bea')).toHaveTextContent('Saca')
+    expect(half('Ana')).not.toHaveTextContent('Saca')
+  })
+
+  it('se puede elegir que saque primero el lado B', async () => {
+    const user = userEvent.setup()
+    renderApp()
+    await agregarJugadoras(user, ['Ana', 'Bea'])
+    await user.click(tab('Partido'))
+    await user.click(screen.getByRole('button', { name: 'Singles' }))
+    await user.click(screen.getByRole('button', { name: 'Ana' }))
+    await user.click(screen.getByRole('button', { name: 'Bea' }))
+    await user.click(screen.getByRole('button', { name: '🎾 Bea' }))
+    await user.click(screen.getByRole('button', { name: 'Empezar partido' }))
+
+    expect(half('Bea')).toHaveTextContent('Saca')
+    expect(half('Ana')).not.toHaveTextContent('Saca')
+  })
+
+  it('eliminar un partido del historial lo saca también del ranking', async () => {
+    const user = userEvent.setup()
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    renderApp()
+    await empezarSingles(user)
+    for (let i = 0; i < 16; i++) await user.click(half('Ana'))
+    await user.click(screen.getByRole('button', { name: 'Guardar' }))
+
+    await user.click(tab('Ranking'))
+    expect(screen.getByText('100%')).toBeInTheDocument()
+
+    await user.click(tab('Historial'))
+    await user.click(screen.getByRole('button', { name: 'Eliminar' }))
+    expect(screen.getByText(/Todavía no jugaron ningún partido/)).toBeInTheDocument()
+
+    await user.click(tab('Ranking'))
+    expect(screen.queryByText('100%')).not.toBeInTheDocument()
   })
 
   it('deshacer devuelve el marcador al punto anterior', async () => {

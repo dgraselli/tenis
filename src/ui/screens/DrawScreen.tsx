@@ -6,10 +6,10 @@ import { STRATEGY_HINTS, STRATEGY_LABELS } from '../../domain/draw/types'
 import type { DrawMatch, DrawStrategy } from '../../domain/draw/types'
 import { playerName } from '../../domain/players/types'
 import { validateRules } from '../../domain/scoring/types'
-import type { MatchRules } from '../../domain/scoring/types'
+import type { MatchRules, Side } from '../../domain/scoring/types'
 import { FormatoPicker } from '../components/FormatoPicker'
 import { PlayerChip } from '../components/PlayerChip'
-import { Titulo, Vacio } from '../components/Vacio'
+import { Opcion, Titulo, Vacio } from '../components/Vacio'
 import { useState } from 'react'
 
 const STRATEGIES: DrawStrategy[] = ['azar', 'sin-repetir', 'nivelado']
@@ -23,6 +23,7 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
   /** Cruce elegido con "Jugar": falta confirmar el formato antes de arrancar. */
   const [pendiente, setPendiente] = useState<DrawMatch | null>(null)
   const [rules, setRules] = useState<MatchRules | null>(null)
+  const [saca, setSaca] = useState<Side>('A')
 
   const activas = players.filter((p) => p.active)
   if (activas.length < 2) {
@@ -33,12 +34,13 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
     setPendiente(match)
     // El default es el último formato usado en esa modalidad.
     setRules(db.settings.lastRules[match.format])
+    setSaca('A')
   }
 
   function empezar() {
     if (pendiente === null || rules === null) return
     clearPending(pendiente)
-    start(pendiente.sideA, pendiente.sideB, rules)
+    start(pendiente.sideA, pendiente.sideB, rules, saca)
     setPendiente(null)
     onPlay()
   }
@@ -158,6 +160,17 @@ export function DrawScreen({ onPlay }: { onPlay: () => void }) {
             </div>
 
             <FormatoPicker rules={rules} onChange={setRules} />
+
+            <div>
+              <Titulo>Saca primero</Titulo>
+              <div className="flex gap-2">
+                {(['A', 'B'] as const).map((side) => (
+                  <Opcion key={side} activa={saca === side} onClick={() => setSaca(side)}>
+                    🎾 {nombres(side === 'A' ? pendiente.sideA : pendiente.sideB)}
+                  </Opcion>
+                ))}
+              </div>
+            </div>
 
             <button
               type="button"

@@ -4,8 +4,10 @@ import { useMatch } from '../../app/useMatch'
 import { usePlayers } from '../../app/usePlayers'
 import { useRemoteControl } from '../../app/useRemoteControl'
 import { formatClock } from '../../lib/duration'
+import { setsWon } from '../../domain/scoring/engine'
 import { canUndo } from '../../domain/scoring/liveMatch'
 import { describeGame, describeRules, formatFinalScore, formatPoint } from '../../domain/scoring/format'
+import { currentServer } from '../../domain/scoring/serve'
 import type { Side } from '../../domain/scoring/types'
 import { playerName } from '../../domain/players/types'
 import { NewMatchScreen } from './NewMatchScreen'
@@ -25,17 +27,16 @@ export function ScoreScreen() {
     active.sides[side].players.map((id) => playerName(players, id)).join(' / ')
 
   const subtitulo = describeGame(status.current, (s) => nameOf(s))
+  const saca = currentServer(status, active.firstServer)
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between gap-2 border-b border-borde px-3 py-2">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 text-xs text-tinta-4">
-            <p className="truncate">{describeRules(rules)}</p>
-            <Cronometro startedAt={active.startedAt} />
-          </div>
+      <header className="flex items-center justify-between gap-3 border-b border-borde px-3 py-2">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs text-tinta-4">{describeRules(rules)}</p>
           {subtitulo && <p className="text-sm font-semibold text-acento-vivo">{subtitulo}</p>}
         </div>
+        <Cronometro startedAt={active.startedAt} />
         <div className="flex shrink-0 gap-2">
           <button
             type="button"
@@ -65,21 +66,40 @@ export function ScoreScreen() {
             disabled={status.finished}
             onClick={() => point(side)}
             className={[
-              'flex flex-1 items-center justify-between gap-4 px-6 transition',
+              'flex flex-1 items-center gap-4 px-4 transition',
               side === 'A' ? 'bg-panel' : 'bg-fondo',
               'enabled:active:bg-acento-fondo',
             ].join(' ')}
           >
-            <div className="min-w-0 text-left">
+            <div className="flex min-w-0 flex-1 items-center gap-2 text-left">
               <div className="truncate text-nombre font-semibold text-tinta">{nameOf(side)}</div>
-              <div className="tabular font-marcador mt-1 text-games font-bold leading-none text-tinta-2">
+              {saca === side && (
+                <span className="shrink-0" title="Saca">
+                  {/* El círculo es la pelotita: quien lo tiene al lado, saca. */}
+                  <span aria-hidden className="block size-5 rounded-full bg-aviso-vivo" />
+                  <span className="sr-only">Saca</span>
+                </span>
+              )}
+            </div>
+
+            {rules.setsToWin > 1 && (
+              <div className="shrink-0 text-center">
+                <div className="tabular font-marcador text-4xl font-bold leading-none text-tinta-4">
+                  {setsWon(status.sets, side)}
+                </div>
+                <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">sets</div>
+              </div>
+            )}
+
+            <div className="shrink-0 text-center">
+              <div className="tabular font-marcador text-games font-bold leading-none text-tinta-2">
                 {status.games[side]}
               </div>
               <div className="mt-1 text-xs uppercase tracking-wide text-tinta-5">games</div>
             </div>
 
             {status.current && (
-              <div className="tabular font-marcador text-puntos font-black leading-none text-acento-vivo">
+              <div className="tabular font-marcador min-w-[2ch] shrink-0 text-right text-puntos font-black leading-none text-acento-vivo">
                 {formatPoint(status.current, side)}
               </div>
             )}
@@ -124,5 +144,9 @@ export function ScoreScreen() {
  */
 function Cronometro({ startedAt }: { startedAt: string }) {
   const seconds = useElapsedSeconds(startedAt)
-  return <span className="tabular shrink-0">{formatClock(seconds)}</span>
+  return (
+    <span className="tabular font-marcador shrink-0 text-3xl font-bold leading-none text-tinta-2">
+      {formatClock(seconds)}
+    </span>
+  )
 }
