@@ -16,6 +16,19 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Tanteador" />
+
+    <!-- Contador de uso (OpenPanel). Si el script externo no carga (sin red,
+         bloqueadores), el stub de window.op solo encola y la app sigue igual. -->
+    <script>
+      window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}} ,has:function(t,r){return"q"===r}}) }();
+      window.op('init', {
+        clientId: 'e7305ebb-4982-4f67-9a9f-f5dfe4196583',
+        trackScreenViews: true,
+        trackOutgoingLinks: true,
+        trackAttributes: true,
+      });
+    </script>
+    <script src="https://openpanel.dev/op1.js" defer async></script>
   </head>
   <body>
     <div id="root"></div>
