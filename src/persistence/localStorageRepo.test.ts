@@ -47,6 +47,7 @@ describe('createLocalStorageRepo', () => {
 
     const db = createLocalStorageRepo(storage).load()
     expect(db.settings.keyBindings).toEqual(DEFAULT_BINDINGS)
+    expect(db.settings.sound).toBe(true)
     expect(db.activeMatch).toBeNull()
   })
 

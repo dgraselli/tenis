@@ -3,9 +3,11 @@ import { finishMatch, formatOf } from '../domain/match/types'
 import type { MatchSide } from '../domain/match/types'
 import type { PlayerId } from '../domain/players/types'
 import type { Command } from '../domain/remote/types'
-import { applyPoint, startLiveMatch, undo } from '../domain/scoring/liveMatch'
+import { scoreEvent } from '../domain/scoring/events'
+import { applyPoint, canUndo, startLiveMatch, undo } from '../domain/scoring/liveMatch'
 import type { MatchRules, Side } from '../domain/scoring/types'
 import { newId } from '../lib/id'
+import { playSound } from '../lib/sound'
 import { useStore } from './store'
 
 export function useMatch() {
@@ -38,22 +40,29 @@ export function useMatch() {
 
   const point = useCallback(
     (side: Side) => {
+      // El sonido se decide acá afuera, con el estado actual: update() tiene
+      // que quedar puro. Recalcular el punto cuesta microsegundos.
+      if (active !== null && db.settings.sound) {
+        const next = applyPoint(active.live, side)
+        if (next !== active.live) playSound(scoreEvent(active.live.status, next.status))
+      }
       update((d) =>
         d.activeMatch === null
           ? d
           : { ...d, activeMatch: { ...d.activeMatch, live: applyPoint(d.activeMatch.live, side) } },
       )
     },
-    [update],
+    [active, db.settings.sound, update],
   )
 
   const undoPoint = useCallback(() => {
+    if (active !== null && canUndo(active.live) && db.settings.sound) playSound('deshacer')
     update((d) =>
       d.activeMatch === null
         ? d
         : { ...d, activeMatch: { ...d.activeMatch, live: undo(d.activeMatch.live) } },
     )
-  }, [update])
+  }, [active, db.settings.sound, update])
 
   /** Táctil y clicker entran por acá: son dos entradas al mismo camino. */
   const dispatch = useCallback(

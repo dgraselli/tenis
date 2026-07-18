@@ -15,6 +15,8 @@ export interface Settings {
   lastRules: Record<MatchFormat, MatchRules>
   keyBindings: KeyBindings
   theme: ThemeId
+  /** Sonidos al anotar. Campo con default: no necesita migración. */
+  sound: boolean
 }
 
 export interface PersistedDB {
@@ -36,6 +38,7 @@ export function emptyDB(): PersistedDB {
       lastRules: { singles: DEFAULT_RULES, doubles: DEFAULT_RULES },
       keyBindings: DEFAULT_BINDINGS,
       theme: DEFAULT_THEME,
+      sound: true,
     },
   }
 }
