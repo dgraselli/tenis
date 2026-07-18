@@ -67,6 +67,22 @@ export function RemoteScreen() {
       </section>
 
       <section>
+        <Titulo>Sonido</Titulo>
+        <label className="flex min-h-12 items-center gap-3 text-sm text-tinta-3">
+          <input
+            type="checkbox"
+            checked={db.settings.sound}
+            onChange={(e) =>
+              update((d) => ({ ...d, settings: { ...d.settings, sound: e.target.checked } }))
+            }
+            className="size-5 accent-acento"
+          />
+          Sonar al anotar: un blip por punto, y más notas si se cierra un game, un set o el
+          partido.
+        </label>
+      </section>
+
+      <section>
         <Titulo>Control remoto</Titulo>
         <p className="text-sm leading-relaxed text-tinta-3">
           Emparejá un clicker Bluetooth con el celular (los pasa-páginas o anillos de control andan
